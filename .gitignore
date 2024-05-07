@@ -37,7 +37,6 @@ out/
 ### VS Code ###
 .vscode/
 
-
 my-debug-key.keystore
 .env
 
