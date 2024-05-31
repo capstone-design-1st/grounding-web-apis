@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
         Random random = new Random();
         long userIdLong = random.nextLong();
         Long userId = userIdLong;
-        
+
         try {
             User user = User.builder()
                     .userId(userId)

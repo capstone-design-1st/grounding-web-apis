@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.UUID;
 
-@Component @Slf4j
+@Component
+@Slf4j
 public class JwtTokenProvider {
 
     @Value("${app.jwt.secret}")
