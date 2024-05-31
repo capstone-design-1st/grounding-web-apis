@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS admin_user
+(
+    admin_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_name VARCHAR(255) NOT NULL,
+    pw VARCHAR(255) NOT NULL
+);

@@ -2,32 +2,59 @@ server:
   port: 8044
 
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
   datasource:
-    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${INITIAL_DB}?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=utf8&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${INITIAL_DB}?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=utf8&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&profileSQL=true&logger=Slf4JLogger
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 30000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
   sql:
     init:
       mode: always
+
   jwt:
     secret: ${JWT_SECRET}
+
   jpa:
     defer-datasource-initialization: true
 
     open-in-view: false
     generate-ddl: true
     show-sql: true
-
     properties:
+      hibernate.default_batch_fetch_size: 1000
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         jdbc:
+          batch_size: 1000
           time_zone: Asia/Seoul
           show_sql: true
           format_sql: true
+          fetch_size: 1000
         hbm2ddl.auto: ${SPRING_DATASOURCE_DDL_AUTO}
-        #ddl-auto: create-drop
     repositories:
       enabled: true
 
@@ -39,3 +66,13 @@ logging:
       hibernate:
         SQL: DEBUG
         type: trace
+
+app:
+  jwt:
+    secret: ${APP_JWT_SECRET}
+    expiration: ${APP_JWT_EXPIRATION}
+  client:
+    url: ${CLIENT_URL}
+  host:
+    url: ${HOST_URL}
+  aligo:

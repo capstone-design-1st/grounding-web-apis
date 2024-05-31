@@ -1,4 +1,4 @@
-package org.example.first.groundingwebapis;
+package test.java.org.example.first.groundingwebapis;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
