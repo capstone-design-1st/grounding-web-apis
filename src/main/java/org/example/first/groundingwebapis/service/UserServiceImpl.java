@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.Random;
 
 @Service
 @Slf4j
@@ -74,7 +76,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto.SignUpResponseDto signUp(UserDto.SignUpRequestDto signUpRequestDto) {
-        Long userId = Long.randomLong();
+        Random random = new Random();
+        long userIdLong = random.nextLong();
+        Long userId = userIdLong;
+        
         try {
             User user = User.builder()
                     .userId(userId)
