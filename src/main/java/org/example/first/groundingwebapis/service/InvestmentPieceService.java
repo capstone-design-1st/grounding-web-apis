@@ -23,6 +23,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
+
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectResponse;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.sync.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -38,6 +48,7 @@ public class InvestmentPieceService {
     private final NotificationRepository notificationRepository;
     private final AssetFilesRepository assetFilesRepository;
     private final DisclosureRepository disclosureRepository;
+    private MultipartFile assetImageFile;
     @Transactional
     public void setInvestmentPiece(InvestmentPieceRequest request){
         var findByLocate = pieceInvestmentRepository.findByLocate(request.getLocation());
@@ -47,6 +58,43 @@ public class InvestmentPieceService {
         String dateString = request.getBuilding_date();
         LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
         LocalDateTime dateTime = date.atStartOfDay();
+
+        // AWS Credentials
+        AwsBasicCredentials awsCreds = AwsBasicCredentials.create(
+                System.getenv("AWS_ACCESS_KEY"),
+                System.getenv("AWS_SECRET_KEY")
+        );
+
+        // S3 Client
+        S3Client s3 = S3Client.builder()
+                .region(Region.of(System.getenv("AWS_REGION"))) // Your region
+                .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
+                .build();
+
+        // File upload path
+        String uploadPath = "/uploaded-files/" + request.getAssetImageFile().getOriginalFilename(); // Modified line
+
+        byte[] assetImageBytes;
+        try {
+            assetImageBytes = request.getAssetImageFile().getBytes(); // Modified line
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Upload file to S3
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(System.getenv("AWS_BUCKET_NAME"))
+                .key(uploadPath)
+                .build();
+
+        PutObjectResponse response = s3.putObject(putObjectRequest, RequestBody.fromBytes(assetImageBytes));
+
+        // Define pieceInvestmentId and documentType
+        Long pieceInvestmentId = 1L; // This should be the actual ID of the piece investment
+        String documentType = "documentType"; // This should be the actual document type
+
+        // Save file info to database
+        assetFilesRepository.save(new AssetFiles(1L, pieceInvestmentId, documentType, request.getAssetImageFile().getOriginalFilename()));
 
         if(request.getType().equals("ESTATES")){
             pieceInvestmentRepository.save(
@@ -69,15 +117,34 @@ public class InvestmentPieceService {
             );
         }
     }
-
     @Transactional
     public void setFiles(Long pieceInvestmentId, String documentType, MultipartFile file){
         try {
-            String resourcesPath = new File("src/main/resources").getAbsolutePath();
-            Path path = Paths.get(resourcesPath + "/uploaded-files/" + file.getOriginalFilename());
-            Files.createDirectories(path.getParent());
-            file.transferTo(path);
-            assetFilesRepository.save(new AssetFiles(1L, pieceInvestmentId, documentType, file.getName()));
+            // AWS Credentials
+            AwsBasicCredentials awsCreds = AwsBasicCredentials.create(
+                    System.getenv("AWS_ACCESS_KEY"),
+                    System.getenv("AWS_SECRET_KEY")
+            );
+
+            // S3 Client
+            S3Client s3 = S3Client.builder()
+                    .region(Region.of(System.getenv("AWS_REGION"))) // Your region
+                    .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
+                    .build();
+
+            // File upload path
+            String uploadPath = "/uploaded-files/" + file.getOriginalFilename();
+
+            // Upload file to S3
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(System.getenv("AWS_BUCKET_NAME"))
+                    .key(uploadPath)
+                    .build();
+
+            PutObjectResponse response = s3.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
+
+            // Save file info to database
+            assetFilesRepository.save(new AssetFiles(1L, pieceInvestmentId, documentType, file.getOriginalFilename()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

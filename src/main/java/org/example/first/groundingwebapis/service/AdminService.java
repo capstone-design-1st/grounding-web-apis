@@ -13,6 +13,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
+import software.amazon.awssdk.services.s3.model.S3Object;
 
 @Slf4j
 @Service
@@ -24,12 +33,36 @@ public class AdminService {
 
     @Transactional(readOnly = true)
     public List<AdminAssetFileListsResponse> getAssetFileLists(){
-        var assetFiles = assetFilesRepository.findAll();
-        return assetFiles.stream()
-                .map(assetFile -> {
-                    return new AdminAssetFileListsResponse(assetFile.getId(), assetFile.getUserId(), assetFile.getDocumentType(), assetFile.getFileName(), assetFile.getAdminYn());
+        // AWS Credentials
+        AwsBasicCredentials awsCreds = AwsBasicCredentials.create(
+                System.getenv("AWS_ACCESS_KEY"),
+                System.getenv("AWS_SECRET_KEY")
+        );
+
+        // S3 Client
+        S3Client s3 = S3Client.builder()
+                .region(Region.of(System.getenv("AWS_REGION"))) // Your region
+                .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
+                .build();
+
+        // List objects in S3 bucket
+        ListObjectsV2Request listObjectsReqManual = ListObjectsV2Request.builder()
+                .bucket(System.getenv("AWS_BUCKET_NAME"))
+                .build();
+
+        ListObjectsV2Response listObjResponse = s3.listObjectsV2(listObjectsReqManual);
+        List<S3Object> objects = listObjResponse.contents();
+
+        // CloudFront URL
+        String cloudFrontUrl = System.getenv("CLOUDFRONT_URL");
+
+        return objects.stream()
+                .map(object -> {
+                    String fileName = object.key();
+                    String fileUrl = cloudFrontUrl + "/" + fileName;
+                    return new AdminAssetFileListsResponse(null, null, null, fileName, null, fileUrl);
                 })
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Transactional

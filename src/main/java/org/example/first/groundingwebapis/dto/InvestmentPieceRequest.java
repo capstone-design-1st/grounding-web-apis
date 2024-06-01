@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
@@ -36,4 +37,5 @@ public class InvestmentPieceRequest {
     private String leaseStartDate;
     private String leaseEndDate;
     private String assetImage;
+    private MultipartFile assetImageFile;
 }

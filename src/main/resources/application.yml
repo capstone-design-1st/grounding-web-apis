@@ -71,6 +71,20 @@ logging:
          SQL: DEBUG
          type: trace
 
+cloud:
+  aws:
+    region:
+      static: ${AWS_REGION}
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    s3:
+      bucket: ${AWS_BUCKET_NAME}
+      region: ${AWS_REGION}
+      root-directory: ${AWS_S3_ROOT_DIRECTORY}
+    cloudfront:
+      distribution-domain: ${CLOUDFRONT_URL}
+
 app:
   jwt:
     secret: ${APP_JWT_SECRET}
