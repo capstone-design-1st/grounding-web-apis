@@ -89,6 +89,15 @@ public class InvestmentPieceService {
 
         PutObjectResponse response = s3.putObject(putObjectRequest, RequestBody.fromBytes(assetImageBytes));
 
+        // Generate S3 URL
+        String s3Url = String.format("https://%s.s3.%s.amazonaws.com/%s",
+                System.getenv("AWS_BUCKET_NAME"),
+                System.getenv("AWS_REGION"),
+                uploadPath);
+
+        // Generate CloudFront URL
+        String cloudFrontUrl = System.getenv("CLOUDFRONT_URL") + "/" + uploadPath;
+
         // Define pieceInvestmentId and documentType
         Long pieceInvestmentId = 1L; // This should be the actual ID of the piece investment
         String documentType = "documentType"; // This should be the actual document type
@@ -142,6 +151,15 @@ public class InvestmentPieceService {
                     .build();
 
             PutObjectResponse response = s3.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
+
+            // Generate S3 URL
+            String s3Url = String.format("https://%s.s3.%s.amazonaws.com/%s",
+                    System.getenv("AWS_BUCKET_NAME"),
+                    System.getenv("AWS_REGION"),
+                    uploadPath);
+
+            // Generate CloudFront URL
+            String cloudFrontUrl = System.getenv("CLOUDFRONT_URL") + "/" + uploadPath;
 
             // Save file info to database
             assetFilesRepository.save(new AssetFiles(1L, pieceInvestmentId, documentType, file.getOriginalFilename()));
