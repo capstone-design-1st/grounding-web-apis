@@ -30,20 +30,15 @@ public class InvestmentPieceController {
     @PostMapping("/asset-file")
     public ResponseEntity<?> setFiles(
             @RequestPart("piece_investment_id") Long pieceInvestmentId,
-            @RequestPart("document_type") String documentType,
-            @RequestPart("file_name") MultipartFile file) {
-        investmentPieceService.setFiles(pieceInvestmentId, documentType, file);
-        return ResponseEntity.ok().build();
+            @RequestPart("file_name") MultipartFile file,
+            @RequestPart("image_files") MultipartFile[] files) throws IOException {
+        return ResponseEntity.ok(investmentPieceService.setFiles(pieceInvestmentId, file, files));
     }
-
-
 
     @GetMapping("/list")
     public ResponseEntity<InvestmentPieceListResponse> getListedList(){
         return ResponseEntity.ok(investmentPieceService.getListedList());
     }
-
-
 
     @DeleteMapping("/list/{investment-piece-id}")
     public ResponseEntity<Void> deleteListedList(@PathVariable(name = "investment-piece-id") String investmentPieceId, @RequestBody
@@ -74,9 +69,8 @@ public class InvestmentPieceController {
                                               @RequestPart("asset_address") String assetAddress,
                                               @RequestPart("asset_name") String assetName,
                                               @RequestPart("disclosure_title") String disclosureTitle,
-                                              @RequestPart("disclosure_content") String disclosureContent,
-                                              @RequestPart("file_name") MultipartFile file) throws IOException {
-        investmentPieceService.setDisclosure(pieceInvestmentId, assetAddress, assetName, disclosureTitle, disclosureContent, file);
+                                              @RequestPart("disclosure_content") String disclosureContent) throws IOException {
+        investmentPieceService.setDisclosure(pieceInvestmentId, assetAddress, assetName, disclosureTitle, disclosureContent);
         return ResponseEntity.ok().build();
     }
 
@@ -92,9 +86,8 @@ public class InvestmentPieceController {
                                               @RequestPart("asset_address") String assetAddress,
                                               @RequestPart("asset_name") String assetName,
                                               @RequestPart("disclosure_title") String disclosureTitle,
-                                              @RequestPart("disclosure_content") String disclosureContent,
-                                              @RequestPart("file_name") MultipartFile file) throws IOException {
-        investmentPieceService.updateDisclosure(disclosureId, pieceInvestmentId, assetAddress, assetName, disclosureTitle, disclosureContent, file);
+                                              @RequestPart("disclosure_content") String disclosureContent) throws IOException {
+        investmentPieceService.updateDisclosure(disclosureId, pieceInvestmentId, assetAddress, assetName, disclosureTitle, disclosureContent);
         return ResponseEntity.ok().build();
     }
 

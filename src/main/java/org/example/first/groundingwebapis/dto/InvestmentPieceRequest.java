@@ -38,5 +38,4 @@ public class InvestmentPieceRequest {
     private String leaseEndDate;
     private String assetImage;
     private String assetCertificateUrl;
-    private MultipartFile assetImageFile;
 }

@@ -23,13 +23,7 @@ public class Disclosure {
     @Column(name = "asset_name", nullable = false)
     private String assetName;
 
-    public void updateDisclosure(Long pieceInvestmentId, String assetAddress, String assetName, String disclosureTitle, String disclosureContent, String fileName) {
-        this.pieceInvestmentId = pieceInvestmentId;
-        this.assetAddress = assetAddress;
-        this.assetName = assetName;
-        this.disclosureTitle = disclosureTitle;
-        this.disclosureContent = disclosureContent;
-        this.fileName = fileName;
+    public Disclosure() {
     }
 
     public Disclosure(Long pieceInvestmentId, String assetAddress, String assetName, String disclosureTitle, String disclosureContent, String fileName) {
@@ -38,8 +32,15 @@ public class Disclosure {
         this.assetName = assetName;
         this.disclosureTitle = disclosureTitle;
         this.disclosureContent = disclosureContent;
-        this.fileName = fileName;
         this.date = LocalDateTime.now();
+    }
+
+    public void updateDisclosure(Long pieceInvestmentId, String assetAddress, String assetName, String disclosureTitle, String disclosureContent) {
+        this.pieceInvestmentId = pieceInvestmentId;
+        this.assetAddress = assetAddress;
+        this.assetName = assetName;
+        this.disclosureTitle = disclosureTitle;
+        this.disclosureContent = disclosureContent;
     }
 
     @Column(name = "disclosure_title", nullable = false)
@@ -48,14 +49,10 @@ public class Disclosure {
     @Column(name = "disclosure_content", nullable = false)
     private String disclosureContent;
 
-    @Column(name = "file_name", nullable = false)
-    private String fileName;
-
-
     @Column
     private LocalDateTime date;
 
-    public Disclosure() {
+    public Disclosure(Long pieceInvestmentId, String assetAddress, String assetName, String disclosureTitle, String disclosureContent) {
 
     }
 }

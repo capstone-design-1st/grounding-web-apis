@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.first.groundingwebapis.entity.AssetFiles;
 
 import java.util.List;
 
@@ -20,4 +21,7 @@ public class MainMyResponse {
 
     @JsonProperty("profits")
     private List<MainSubResponse> profits;
+
+    @JsonProperty("thumbnail")
+    private List<AssetFiles> thumbnailImage;
 }

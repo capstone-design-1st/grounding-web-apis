@@ -18,6 +18,5 @@ public class DisclosureResponse {
     private String assetName;
     private String disclosureTitle;
     private String disclosureContent;
-    private String fileName;
     private String date;
 }

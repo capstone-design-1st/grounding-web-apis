@@ -14,31 +14,29 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.List;
 
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectResponse;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.core.sync.RequestBody;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class InvestmentPieceService {   
+public class InvestmentPieceService {
 
+    @Value("${spring.cloud.aws.s3.bucket}")
+    private String bucketName;
 
+    @Value("${spring.cloud.aws.cloudfront.distribution-domain}")
+    private String cloudFrontUrl;
+    private final S3Client s3Client;
     private final PieceInvestmentRepository pieceInvestmentRepository;
     private final UserRepository userRepository;
     private final PieceInvestmentInfoRepository pieceInvestmentInfoRepository;
@@ -48,7 +46,7 @@ public class InvestmentPieceService {
     private final NotificationRepository notificationRepository;
     private final AssetFilesRepository assetFilesRepository;
     private final DisclosureRepository disclosureRepository;
-    private MultipartFile assetImageFile;
+
     @Transactional
     public void setInvestmentPiece(InvestmentPieceRequest request){
         var findByLocate = pieceInvestmentRepository.findByLocate(request.getLocation());
@@ -59,59 +57,13 @@ public class InvestmentPieceService {
         LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
         LocalDateTime dateTime = date.atStartOfDay();
 
-        // AWS Credentials
-        AwsBasicCredentials awsCreds = AwsBasicCredentials.create(
-                System.getenv("AWS_ACCESS_KEY"),
-                System.getenv("AWS_SECRET_KEY")
-        );
-
-        // S3 Client
-        S3Client s3 = S3Client.builder()
-                .region(Region.of(System.getenv("AWS_REGION"))) // Your region
-                .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
-                .build();
-
-        // File upload path
-        String uploadPath = "/uploaded-files/" + request.getAssetImageFile().getOriginalFilename(); // Modified line
-
-        byte[] assetImageBytes;
-        try {
-            assetImageBytes = request.getAssetImageFile().getBytes(); // Modified line
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Upload file to S3
-        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(System.getenv("AWS_BUCKET_NAME"))
-                .key(uploadPath)
-                .build();
-
-        PutObjectResponse response = s3.putObject(putObjectRequest, RequestBody.fromBytes(assetImageBytes));
-
-        // Generate S3 URL
-        String s3Url = String.format("https://%s.s3.%s.amazonaws.com/%s",
-                System.getenv("AWS_BUCKET_NAME"),
-                System.getenv("AWS_REGION"),
-                uploadPath);
-
-        // Generate CloudFront URL
-        String cloudFrontUrl = System.getenv("CLOUDFRONT_URL") + "/" + uploadPath;
-
-        // Define pieceInvestmentId and documentType
-        Long pieceInvestmentId = 1L; // This should be the actual ID of the piece investment
-        String documentType = "documentType"; // This should be the actual document type
-
-        // Save file info to database
-        assetFilesRepository.save(new AssetFiles(1L, pieceInvestmentId, documentType, request.getAssetImageFile().getOriginalFilename()));
-
         if(request.getType().equals("ESTATES")){
             pieceInvestmentRepository.save(
                     new PieceInvestment(
                             request.getType(), request.getLocation(), request.getPrice(), request.getInfo(), request.getFloors()
                             ,request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
                             ,request.getBuilding_to_rand_ratio(), request.getFloor_area_ratio(), dateTime, request.isAutomatic_close_flag()
-                            ,request.getPricePerUnit(), request.getAssetType(), request.getEntryStatus(), request.getDesiredPrice(), request.getPiece_count(), request.getLeaseStartDate(),request.getLeaseEndDate(), request.getAssetImage() ,1L /* TODO UserId 변경해야함 */
+                            ,request.getPricePerUnit(), request.getAssetType(), request.getEntryStatus(), request.getDesiredPrice(), request.getPiece_count(), request.getLeaseStartDate(),request.getLeaseEndDate(), request.getAssetImage() , 1L /* TODO UserId 변경해야함 */
                     )
             );
         }else{
@@ -126,46 +78,32 @@ public class InvestmentPieceService {
             );
         }
     }
+
     @Transactional
-    public void setFiles(Long pieceInvestmentId, String documentType, MultipartFile file){
-        try {
-            // AWS Credentials
-            AwsBasicCredentials awsCreds = AwsBasicCredentials.create(
-                    System.getenv("AWS_ACCESS_KEY"),
-                    System.getenv("AWS_SECRET_KEY")
-            );
+    public Map<String, String> setFiles(Long pieceInvestmentId, MultipartFile file, MultipartFile[] files) throws IOException {
+        Map<String, String> result = new HashMap<>();
+        String pdfUrlInfo = awsFileTransfer(file);
+        result.put("PDF", pdfUrlInfo);
+        assetFilesRepository.save(new AssetFiles(1L, pieceInvestmentId, "PDF", pdfUrlInfo));
 
-            // S3 Client
-            S3Client s3 = S3Client.builder()
-                    .region(Region.of(System.getenv("AWS_REGION"))) // Your region
-                    .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
-                    .build();
-
-            // File upload path
-            String uploadPath = "/uploaded-files/" + file.getOriginalFilename();
-
-            // Upload file to S3
-            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                    .bucket(System.getenv("AWS_BUCKET_NAME"))
-                    .key(uploadPath)
-                    .build();
-
-            PutObjectResponse response = s3.putObject(putObjectRequest, RequestBody.fromBytes(file.getBytes()));
-
-            // Generate S3 URL
-            String s3Url = String.format("https://%s.s3.%s.amazonaws.com/%s",
-                    System.getenv("AWS_BUCKET_NAME"),
-                    System.getenv("AWS_REGION"),
-                    uploadPath);
-
-            // Generate CloudFront URL
-            String cloudFrontUrl = System.getenv("CLOUDFRONT_URL") + "/" + uploadPath;
-
-            // Save file info to database
-            assetFilesRepository.save(new AssetFiles(1L, pieceInvestmentId, documentType, file.getOriginalFilename()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        int i = 0;
+        for (MultipartFile image : files) {
+            String imageUrlInfo = awsFileTransfer(image);
+            assetFilesRepository.save(new AssetFiles(1L, pieceInvestmentId, "IMAGE" + String.valueOf(i), imageUrlInfo));
+            result.put("IMAGE" + String.valueOf(i), imageUrlInfo);
+            i++;
         }
+        return result;
+    }
+
+    private String awsFileTransfer(MultipartFile file) throws IOException {
+        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        s3Client.putObject(PutObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(fileName)
+                        .build(),
+                software.amazon.awssdk.core.sync.RequestBody.fromBytes(file.getBytes()));
+        return cloudFrontUrl + "/" + fileName;
     }
 
     @Transactional(readOnly = true)
@@ -235,37 +173,20 @@ public class InvestmentPieceService {
         return lists.stream()
                 .map(disclosure -> {
                     return new DisclosureResponse(disclosure.getId(), disclosure.getPieceInvestmentId(), disclosure.getAssetAddress(), disclosure.getAssetName()
-                            ,disclosure.getDisclosureTitle(), disclosure.getDisclosureContent(), disclosure.getFileName(), disclosure.getDate().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString());
+                            ,disclosure.getDisclosureTitle(), disclosure.getDisclosureContent(), disclosure.getDate().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString());
                 })
                 .toList();
     }
 
     @Transactional
-    public void setDisclosure(Long pieceInvestmentId, String assetAddress, String assetName, String disclosureTitle, String disclosureContent,MultipartFile file) throws IOException {
-        var fileName = "";
-        if(!file.isEmpty()){
-            String resourcesPath = new File("src/main/resources/uploaded-files").getAbsolutePath();
-            Path path = Paths.get(resourcesPath + "/disclosure/" + file.getOriginalFilename());
-            Files.createDirectories(path.getParent());
-            file.transferTo(path);
-            fileName = file.getOriginalFilename();
-        }
-        disclosureRepository.save(new Disclosure(pieceInvestmentId, assetAddress, assetName, disclosureTitle, disclosureContent, fileName));
+    public void setDisclosure(Long pieceInvestmentId, String assetAddress, String assetName, String disclosureTitle, String disclosureContent) throws IOException {
+        disclosureRepository.save(new Disclosure(pieceInvestmentId, assetAddress, assetName, disclosureTitle, disclosureContent));
     }
 
     @Transactional
-    public void updateDisclosure(Long disclosureId, Long pieceInvestmentId, String assetAddress, String assetName, String disclosureTitle, String disclosureContent,MultipartFile file) throws IOException {
+    public void updateDisclosure(Long disclosureId, Long pieceInvestmentId, String assetAddress, String assetName, String disclosureTitle, String disclosureContent) throws IOException {
         var disclosure = disclosureRepository.findById(disclosureId).get();
-        var fileName = "";
-        if(!file.isEmpty()){
-            String resourcesPath = new File("src/main/resources/uploaded-files").getAbsolutePath();
-            Path path = Paths.get(resourcesPath + "/disclosure/" + file.getOriginalFilename());
-            Files.createDirectories(path.getParent());
-            file.transferTo(path);
-            fileName = file.getOriginalFilename();
-        }
-
-        disclosure.updateDisclosure(pieceInvestmentId, assetAddress, assetName, disclosureTitle, disclosureContent, fileName);
+        disclosure.updateDisclosure(pieceInvestmentId, assetAddress, assetName, disclosureTitle, disclosureContent);
     }
 
     @Transactional

@@ -15,5 +15,4 @@ public class AdminAssetFileListsResponse {
     private String documentType;
     private String fileName;
     private String adminYn;
-    private String fileUrl;
 }

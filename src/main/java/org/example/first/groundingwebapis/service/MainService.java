@@ -1,11 +1,15 @@
 package org.example.first.groundingwebapis.service;
 
 import org.example.first.groundingwebapis.dto.*;
+import org.example.first.groundingwebapis.entity.AssetFiles;
 import org.example.first.groundingwebapis.entity.PieceInvestment;
+import org.example.first.groundingwebapis.repository.AssetFilesRepository;
 import org.example.first.groundingwebapis.repository.InvestmentStatusRepository;
 import org.example.first.groundingwebapis.repository.PieceInvestmentRepository;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +23,7 @@ public class MainService {
 
     private final PieceInvestmentRepository pieceInvestmentRepository;
     private final InvestmentStatusRepository investmentStatusRepository;
+    private final AssetFilesRepository assetFilesRepository;
 
     @Transactional(readOnly = true)
     public MainResponse getSaleStatus(){
@@ -40,6 +45,21 @@ public class MainService {
     @Transactional(readOnly = true)
     public MainMyResponse getMySaleStatusList(){
         var pieceInvestments = pieceInvestmentRepository.findByUserId(1L);
+        List<AssetFiles> thumbnailImage = new ArrayList<>();
+        var topRecentInvestments = pieceInvestments.stream()
+                .sorted(Comparator.comparing(PieceInvestment::getDate).reversed())
+                .limit(4)
+                .collect(Collectors.toList());
+
+        for (PieceInvestment piece : topRecentInvestments){
+            var assetFiles = assetFilesRepository.findByPieceInvestmentId(piece.getPieceInvestmentId());
+            var result = assetFiles.stream()
+                    .filter(file -> "IMAGE0".equals(file.getDocumentType()))
+                    .findFirst().orElse(new AssetFiles());
+            if(result.getFileName() != null){
+                thumbnailImage.add(result);
+            }
+        }
 
         var lands = pieceInvestments.stream()
                 .filter(piece -> "LAND".equals(piece.getAssetType()))
@@ -56,7 +76,7 @@ public class MainService {
                 .map(this::convertToSubDto)
                 .collect(Collectors.toList());
 
-        return new MainMyResponse(estates, lands, profits);
+        return new MainMyResponse(estates, lands, profits, thumbnailImage);
     }
 
     @Transactional(readOnly = true)
