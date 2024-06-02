@@ -33,10 +33,10 @@ public class SecurityConfig{
     private final JwtTokenFilter jwtTokenFilter;
     private final UserDetailServiceImpl userDetailsService;
 
-    @Value("${app.client.url}")
+    @Value("${APP_CLIENT_URL}")
     private String clientUrl;
 
-    @Value("${app.host.url}")
+    @Value("${APP_HOST_URL}")
     private String hostUrl;
 
     @Bean
