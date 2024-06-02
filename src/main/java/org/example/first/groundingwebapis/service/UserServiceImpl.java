@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean userExistsByNickname(String email) {
+    public boolean userExistsByName(String email) {
         return userRepository.existsByEmail(email);
     }
 
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
                     .userId(userId)
                     .email(signUpRequestDto.getEmail())
                     .password(passwordEncoder.encode(signUpRequestDto.getPassword()))
-                    .nickname(signUpRequestDto.getNickname())
+                    .name(signUpRequestDto.getName())
                     .phoneNumber(signUpRequestDto.getPhoneNumber())
                     .build();
             userRepository.save(user);

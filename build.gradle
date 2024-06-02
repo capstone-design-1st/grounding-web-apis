@@ -33,6 +33,8 @@ dependencies {
     implementation 'org.json:json:20210307'
 
     runtimeOnly 'com.mysql:mysql-connector-j'
+    //implementation('mysql:mysql-connector-java:8.0.34')
+    //runtimeOnly 'com.mysql:mysql-connector-java:8.0.34'
 
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 

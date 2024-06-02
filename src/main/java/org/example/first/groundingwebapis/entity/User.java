@@ -38,9 +38,6 @@ public class User {
     @Column(name = "pw", nullable = false)
     private String password;
 
-    @Column(name = "nickname", length = 10)
-    private String nickname;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "role", length = 10)
     private Role role;
@@ -63,13 +60,13 @@ public class User {
             String email,
             String password,
             String phoneNumber,
-            String nickname,
+            String name,
             Role role) {
         this.userId = userId;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.nickname = nickname;
+        this.name = name;
         this.role = role;
     }
 
@@ -79,7 +76,7 @@ public class User {
                 .email(email)
                 .password(password)
                 .phoneNumber(phoneNumber)
-                .nickname(nickname)
+                .name(name)
                 .build();
     }
 

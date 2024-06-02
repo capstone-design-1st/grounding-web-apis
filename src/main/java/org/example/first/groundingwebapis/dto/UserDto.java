@@ -20,7 +20,7 @@ public class UserDto {
     private String email;
     private String password;
     private String phoneNumber;
-    private String nickname;
+    private String name;
 
     @Builder
     public UserDto(
@@ -28,12 +28,12 @@ public class UserDto {
             String email,
             String password,
             String phoneNumber,
-            String nickname) {
+            String name) {
         this.userId = userId;
         this.email = email != null ? email : "";
         this.password = password != null ? password : "";
         this.phoneNumber = phoneNumber != null ? phoneNumber : "";
-        this.nickname = nickname != null ? nickname : "";
+        this.name = name != null ? name : "";
     }
 
 
@@ -64,14 +64,11 @@ public class UserDto {
 
         @NotBlank
         @Pattern(regexp = "^[a-zA-Z0-9가-힣]{2,10}$", message = "유효하지 않은 닉네임(2자리 이상 10자리 사이이며 특수 문자 미포함)입니다. 재시도해주세요.")
-        private String nickname;
+        private String name;
 
         @NotBlank
         @Pattern(regexp = "^01[016-9]\\d{8}$", message = "유효하지 않은 전화번호입니다. 재시도해주세요.")
         private String phoneNumber;
-
-        @NotBlank
-        private String gender;
 
     }
 
@@ -110,7 +107,7 @@ public class UserDto {
     public static class UserMyProfileInfoResponseDto{
         private Long userId;
 
-        private String nickname;
+        private String name;
         private String statusMessage;
     }
 
