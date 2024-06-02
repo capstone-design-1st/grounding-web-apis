@@ -45,8 +45,8 @@ public class User {
     @Column(name = "role", length = 10)
     private Role role;
 
-    @Column(name = "estate_certificate_url")
-    private String estateCertificateUrl;
+    @Column(name = "asset_certificate_url")
+    private String assetCertificateUrl;
 
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;

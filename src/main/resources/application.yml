@@ -14,7 +14,7 @@ spring:
           starttls:
             enable: true
 
-datasource:
+  datasource:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${INITIAL_DB}?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=utf8&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&profileSQL=true&logger=Slf4JLogger
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${DB_USERNAME}
@@ -26,19 +26,19 @@ datasource:
       connection-timeout: 20000
       max-lifetime: 1800000
 
-data:
-  redis:
-    host: ${REDIS_HOST}
-    port: ${REDIS_PORT}
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
 
-sql:
-  init:
-    mode: always
+  sql:
+    init:
+      mode: always
 
-jwt:
-  secret: ${JWT_SECRET}
+  jwt:
+    secret: ${JWT_SECRET}
 
-jpa:
+  jpa:
     defer-datasource-initialization: true
 
     open-in-view: false
@@ -58,32 +58,28 @@ jpa:
     repositories:
       enabled: true
 
-redis:
-  host: ${REDIS_HOST}
-  port: ${REDIS_PORT}
-
-logging:
-  level:
-    org:
+  logging:
+    level:
+      org:
         springframework:
           security: DEBUG
         hibernate:
          SQL: DEBUG
          type: trace
 
-cloud:
-  aws:
-    region:
-      static: ${AWS_REGION}
-    credentials:
-      access-key: ${AWS_ACCESS_KEY}
-      secret-key: ${AWS_SECRET_KEY}
-    s3:
-      bucket: ${AWS_BUCKET_NAME}
-      region: ${AWS_REGION}
-      root-directory: ${AWS_S3_ROOT_DIRECTORY}
-    cloudfront:
-      distribution-domain: ${CLOUDFRONT_URL}
+  cloud:
+    aws:
+      region:
+        static: ${AWS_REGION}
+      credentials:
+        access-key: ${AWS_ACCESS_KEY}
+        secret-key: ${AWS_SECRET_KEY}
+      s3:
+        bucket: ${AWS_BUCKET_NAME}
+        region: ${AWS_REGION}
+        root-directory: ${AWS_S3_ROOT_DIRECTORY}
+      cloudfront:
+        distribution-domain: ${CLOUDFRONT_URL}
 
 app:
   jwt:

@@ -37,8 +37,8 @@ public class PieceInvestment {
     @Column(name = "price", nullable = false)
     private Integer price;
 
-    @Column(name = "owner_certificate_url")
-    private String ownerCertificateUrl;
+    @Column(name = "asset_certificate_url")
+    private String assetCertificateUrl;
 
     @Column(name = "other_information")
     private String otherInformation;
