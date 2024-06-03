@@ -88,8 +88,8 @@ jobs:
                 -e APP_JWT_SECRET='${{ secrets.APP_JWT_SECRET }}' \
                 -e APP_JWT_EXPIRATION='${{ secrets.APP_JWT_EXPIRATION }}' \
                 -e SPRING_DATASOURCE_DDL_AUTO='${{ secrets.SPRING_DATASOURCE_DDL_AUTO }}' \
-                -e APP_CLIENT_URL='${{ secrets.CLIENT_URL }}' \
-                -e APP_HOST_URL='${{ secrets.HOST_URL }}' \
+                -e CLIENT_URL='${{ secrets.CLIENT_URL }}' \
+                -e HOST_URL='${{ secrets.HOST_URL }}' \
                 -e REDIS_HOST='${{ secrets.REDIS_HOST }}' \
                 -e REDIS_PORT='${{ secrets.REDIS_PORT }}' \
                 -e MAIL_USERNAME='${{ secrets.MAIL_USERNAME }}' \

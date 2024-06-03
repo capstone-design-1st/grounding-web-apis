@@ -38,6 +38,9 @@ spring:
   jwt:
     secret: ${JWT_SECRET}
 
+  jmx:
+    enabled: true
+
   jpa:
     defer-datasource-initialization: true
 
