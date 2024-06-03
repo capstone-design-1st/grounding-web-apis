@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 public class UserController {
 
     private final UserService userService;
-    private final SmsService smsService;
+    //private final SmsService smsService;
     private final VerificationService verificationService;
     private final MailService mailService;
     private final ObjectMapper objectMapper;
@@ -155,7 +155,7 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); //204
     }
-
+/*
     @PostMapping("/sign-up/phone/validation")
     public ResponseEntity<ResponseDto> validationPhoneNumber(@Valid @RequestBody SmsDto.ValidationRequestDto validationRequestDto) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
         String phoneNumber = validationRequestDto.getPhoneNumber();
@@ -177,7 +177,7 @@ public class UserController {
 
         log.info(verificationCode);
 
-        smsService.sendAlimtalk(messageDto);
+        //smsService.sendAlimtalk(messageDto);
 
         verificationService.saveVerificationCode(phoneNumber, verificationCode);
         verificationService.saveCompletionCode(phoneNumber, false);
@@ -203,7 +203,7 @@ public class UserController {
             return ResponseEntity.status(userErrorResult.getHttpStatus()).body(responseDto);
         }
     }
-
+*/
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping //API-102
