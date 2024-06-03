@@ -31,11 +31,12 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 @RequiredArgsConstructor
 public class InvestmentPieceService {
 
-    @Value("${spring.cloud.aws.s3.bucket}")
+    @Value("AWS_BUCKET_NAME")
     private String bucketName;
 
-    @Value("${spring.cloud.aws.cloudfront.distribution-domain}")
+    @Value("CLOUDFRONT_URL")
     private String cloudFrontUrl;
+
     private final S3Client s3Client;
     private final PieceInvestmentRepository pieceInvestmentRepository;
     private final UserRepository userRepository;
