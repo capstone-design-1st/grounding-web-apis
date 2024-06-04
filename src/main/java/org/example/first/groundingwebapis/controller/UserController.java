@@ -2,6 +2,7 @@ package org.example.first.groundingwebapis.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
@@ -29,6 +30,7 @@ import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -287,5 +289,17 @@ public class UserController {
 
             return ResponseEntity.status(userErrorResult.getHttpStatus()).body(responseDto);
         }
+    }
+
+    @GetMapping("/wallet")
+    public ResponseEntity<ResponseDto> getWalletAddress(@AuthenticationPrincipal UserPrincipal user) {
+        Long userId = user.getUser().getUserId();
+        UserDto.GetWalletAddressResponseDto getWalletAddressResponseDto = userService.getWallet(userId);
+
+        ResponseDto responseDto = ResponseDto.builder()
+                .payload(objectMapper.convertValue(getWalletAddressResponseDto, Map.class))
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto); //200
     }
 }

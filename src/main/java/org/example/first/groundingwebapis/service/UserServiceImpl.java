@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -86,6 +87,7 @@ public class UserServiceImpl implements UserService {
                     .password(passwordEncoder.encode(signUpRequestDto.getPassword()))
                     .name(signUpRequestDto.getName())
                     .phoneNumber(signUpRequestDto.getPhoneNumber())
+                    .walletAddress(signUpRequestDto.getWalletAddress())
                     .build();
             userRepository.save(user);
         } catch (Exception e) {
@@ -133,5 +135,19 @@ public class UserServiceImpl implements UserService {
                 .phoneNumber(user.getPhoneNumber())
                 .build();
         return getPhoneNumberResponseDto;
+    }
+
+    @Override
+    public UserDto.GetWalletAddressResponseDto getWallet(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(UserErrorResult.USER_NOT_FOUND));
+
+        UserDto.GetWalletAddressResponseDto getWalletAddressResponseDto = UserDto.GetWalletAddressResponseDto
+                .builder()
+                .userId(user.getUserId())
+                .walletAddress(user.getWalletAddress())
+                .build();
+        return getWalletAddressResponseDto;
+
     }
 }

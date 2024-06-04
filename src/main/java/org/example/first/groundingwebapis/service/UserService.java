@@ -3,6 +3,8 @@ package org.example.first.groundingwebapis.service;
 import org.example.first.groundingwebapis.dto.UserDto;
 import org.example.first.groundingwebapis.entity.User;
 
+import java.util.UUID;
+
 
 public interface UserService {
     boolean userExistsByEmail(String email);
@@ -23,4 +25,5 @@ public interface UserService {
 
     UserDto.GetPhoneNumberResponseDto getPhoneNumber(Long userId);
 
+    UserDto.GetWalletAddressResponseDto getWallet(Long userId);
 }
