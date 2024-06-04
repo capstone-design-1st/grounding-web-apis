@@ -8,6 +8,9 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
+import java.net.URI;
+import java.util.Optional;
+
 @Configuration
 public class S3Config {
 
@@ -22,6 +25,9 @@ public class S3Config {
 
     @Bean
     public S3Client s3Client() {
+        String endpointOverride = Optional.ofNullable(System.getenv("AWS_ENDPOINT_OVERRIDE"))
+                .orElse("https://default-endpoint.amazonaws.com");
+
         return S3Client.builder()
                 .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretAccessKey)))
