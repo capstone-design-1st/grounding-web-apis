@@ -16,6 +16,13 @@ public class KafkaUserInfoProducerServiceImpl implements KafkaUserInfoProducerSe
 
     private final ObjectMapper objectMapper;
 
+    /*
+    아래 예시는 KafkaDto.UserInfo 객체를 받아서 KafkaProducer를 이용해 Kafka에 메시지를 전송하는 메소드입니다.
+
+    grounding service에서 매물 및 관련 파일 생성 시 토픽을 만들어 정보를 전송해주시면 됩니다.
+    토픽을 통해 send하면 자동으로 토픽은 생성됩니다.
+    userJsonString처럼 객체를 json string으로 변환하여 전송하면 됩니다.
+     */
     @Override
     public void createUser(KafkaDto.UserInfo userInfo) {
         String topic = "user-create";
@@ -30,5 +37,7 @@ public class KafkaUserInfoProducerServiceImpl implements KafkaUserInfoProducerSe
         }
 
         kafkaProducer.send(topic, userJsonString);
+
+
     }
 }
