@@ -80,6 +80,8 @@ spring:
       max-file-size: 10MB
       max-request-size: 100MB
       enabled: true
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
 
 logging:
   level:
