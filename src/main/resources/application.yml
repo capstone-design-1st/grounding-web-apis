@@ -65,7 +65,6 @@ spring:
     aws:
       region:
         static: ${AWS_REGION}
-        endpoint-override: ${AWS_ENDPOINT_OVERRIDE}
       credentials:
         access-key: ${AWS_ACCESS_KEY}
         secret-key: ${AWS_SECRET_KEY}
