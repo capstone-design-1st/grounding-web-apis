@@ -140,6 +140,7 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "회원가입 이메일 중복 확인")
     @PostMapping("/sign-up/email/validation")
     public ResponseEntity<ResponseDto> checkDuplicatedEmail(@Valid @RequestBody UserDto.CheckDuplicatedEmailRequestDto checkDuplicatedEmailRequestDto) {
 
@@ -193,19 +194,10 @@ public class UserController {
     }
 
     //email validation, verification
+    @Operation(summary = "이메일 인증코드 발송")
     @PostMapping("/email/validation")
     public ResponseEntity<ResponseDto> validationEmail(@Valid @RequestBody MailDto.MailRequestDto mailRequestDto) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
         String email = mailRequestDto.getEmail();
-
-        if (!userService.userExistsByEmail(email)) {
-            log.info("존재하지 않는 회원");
-            UserErrorResult userErrorResult = UserErrorResult.USER_NOT_FOUND;
-            ResponseDto responseDto = ResponseDto.builder()
-                    .error(userErrorResult.getMessage())
-                    .build();
-
-            return ResponseEntity.status(userErrorResult.getHttpStatus()).body(responseDto);
-        }
 
         String verificationCode = verificationService.makeVerificationCode();
 
@@ -222,6 +214,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); //204
     }
 
+    @Operation(summary = "이메일 인증코드 검증")
     @PostMapping("/email/verification")
     public ResponseEntity<ResponseDto> verificationEmail(@RequestBody MailDto.MailVerifyDto mailVerifyDto) {
         String email = mailVerifyDto.getEmail();
