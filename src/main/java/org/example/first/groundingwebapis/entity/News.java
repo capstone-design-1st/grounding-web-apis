@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.first.groundingwebapis.dto.NewsDto;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -26,6 +25,9 @@ public class News {
             this.id = (long) UUID.randomUUID().toString().hashCode();
     }
 
+    @Column(name = "piece_investment_id")
+    private Long pieceInvestmentId;
+
     @Column(name = "title", length = 50)
     private String title;
 
@@ -33,14 +35,13 @@ public class News {
     private String publisher;
 
     @Column(name = "reported_at")
-    private LocalDate reportedAt;
+    private String reportedAt;
 
 
     @Builder
     public News(String title,
-                LocalDate reportedAt,
-                String publisher,
-                String url) {
+                String reportedAt,
+                String publisher) {
         this.title = title;
         this.reportedAt = reportedAt;
         this.publisher = publisher;
