@@ -50,6 +50,7 @@ public class InvestmentPieceService {
     private final NotificationRepository notificationRepository;
     private final AssetFilesRepository assetFilesRepository;
     private final DisclosureRepository disclosureRepository;
+    private final NewsRepository newsRepository;
 
     @Transactional
     public void setInvestmentPiece(InvestmentPieceRequest request){
@@ -169,6 +170,17 @@ public class InvestmentPieceService {
         });
 
         return new NotificationResponse(estateResponse, landResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public List<NewsDto> getNewsList(Long pieceInvestmentId){
+        List<News> newsList = newsRepository.findByPieceInvestmentId(pieceInvestmentId);
+        return newsList.stream()
+                .map(news -> new NewsDto(
+                        news.getTitle(),
+                        news.getReportedAt().format(String.valueOf(DateTimeFormatter.ofPattern("yyyyMMdd"))).toString(),
+                        news.getPublisher()))
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

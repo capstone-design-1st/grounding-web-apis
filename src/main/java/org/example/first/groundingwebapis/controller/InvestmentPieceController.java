@@ -58,6 +58,12 @@ public class InvestmentPieceController {
         return ResponseEntity.ok(investmentPieceService.getNotification());
     }
 
+    // 뉴스 조회
+    @GetMapping("/news/{piece-investment-id}")
+    public ResponseEntity<List<NewsDto>> getNewsList(@PathVariable(name = "piece-investment-id") Long id){
+        return ResponseEntity.ok(investmentPieceService.getNewsList(id));
+    }
+
     // 공시조회
     @GetMapping("/disclosure/{piece-investment-id}")
     public ResponseEntity<List<DisclosureResponse>> getDisclosureList(@PathVariable(name = "piece-investment-id") Long id){

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.UUID;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @NoArgsConstructor
@@ -17,15 +18,15 @@ import java.util.UUID;
 public class NewsDto {
 
     private Long id;
+    private Long pieceInvestmentId;
     private String title;
-    private LocalDate reportedAt;
+    private String reportedAt;
     private String publisher;
 
     @Builder
-    public NewsDto(Long id,  String title, LocalDate reportedAt, String publisher, String url) {
-        this.id = id;
+    public NewsDto(String title, String reportedAt, String publisher) {
         this.title = title != null ? title : "";
-        this.reportedAt = reportedAt != null ? reportedAt : LocalDate.now();
+        this.reportedAt = reportedAt != null ? reportedAt : LocalDate.now().format(DateTimeFormatter.ISO_DATE);
         this.publisher = publisher != null ? publisher : "";
     }
 
