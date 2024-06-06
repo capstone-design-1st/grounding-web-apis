@@ -100,8 +100,8 @@ public class PieceInvestment {
     @Column(name = "price_per_unit")
     private Integer pricePerUnit;
 
-    @Column(name = "additional_notes")
-    private String additionalNotes;
+    @Column(name = "investment_point")
+    private String investmentPoint;
 
     @Column(name = "land_image_registration")
     private String landImageRegistration;
@@ -143,7 +143,7 @@ public class PieceInvestment {
     public PieceInvestment(String type, String locate, Integer price, String otherInformation, Integer floors,
                            String useArea, String mainUse, double landArea, double totalArea, double buildingToRandRatio,
                            double floor_area_ratio, LocalDateTime buildingDate, boolean automaticCloseFlag, String assetType,String entryStatus,
-                             String landClassification,String recommendedUse,String desiredPrice,Integer pricePerUnit,String additionalNotes,
+                             String landClassification,String recommendedUse,String desiredPrice,Integer pricePerUnit,String investmentPoint,
                            String landImageRegistration,Integer pieceCount,String leaseStartDate, String leaseEndDate, String assetImage, Long userId) {
         this.type = type;
         this.locate = locate;
@@ -165,7 +165,7 @@ public class PieceInvestment {
         this.recommendedUse = recommendedUse;
         this.desiredPrice = desiredPrice;
         this.pricePerUnit = pricePerUnit;
-        this.additionalNotes = additionalNotes;
+        this.investmentPoint = investmentPoint;
         this.landImageRegistration = landImageRegistration;
         this.pieceCount = pieceCount;
         this.leaseStartDate = leaseStartDate;
