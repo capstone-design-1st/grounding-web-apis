@@ -77,7 +77,7 @@ public class InvestmentPieceService {
                             ,request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
                             ,request.getBuilding_to_rand_ratio(), request.getFloor_area_ratio(), dateTime, request.isAutomatic_close_flag()
                             ,request.getAssetType(), request.getEntryStatus(), request.getLandClassification()
-                            ,request.getRecommendedUse(), request.getDesiredPrice(),request.getPricePerUnit(),request.getAdditionalNotes(), request.getLandImageRegistration(), request.getPiece_count(), request.getLeaseStartDate(),request.getLeaseEndDate(), request.getAssetImage(), 1L /* TODO UserId 변경해야함 */
+                            ,request.getRecommendedUse(), request.getDesiredPrice(),request.getPricePerUnit(),request.getInvestmentPoint(), request.getLandImageRegistration(), request.getPiece_count(), request.getLeaseStartDate(),request.getLeaseEndDate(), request.getAssetImage(), 1L /* TODO UserId 변경해야함 */
                     )
             );
         }
