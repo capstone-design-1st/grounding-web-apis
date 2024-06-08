@@ -68,7 +68,7 @@ public class InvestmentPieceService {
                             request.getType(), request.getLocation(), request.getPrice(), request.getInfo(), request.getFloors()
                             ,request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
                             ,request.getBuilding_to_rand_ratio(), request.getFloor_area_ratio(), dateTime, request.isAutomatic_close_flag()
-                            ,request.getPricePerUnit(), request.getAssetType(), request.getEntryStatus(), request.getDesiredPrice(), request.getPiece_count(), request.getLeaseStartDate(),request.getLeaseEndDate(), request.getAssetImage() , 1L /* TODO UserId 변경해야함 */
+                            ,request.getPricePerUnit(),request.getInvestmentPoint(), request.getAssetType(), request.getEntryStatus(), request.getDesiredPrice(), request.getPiece_count(), request.getLeaseStartDate(),request.getLeaseEndDate(), request.getAssetImage() , 1L /* TODO UserId 변경해야함 */
                     )
             );
         }else{
