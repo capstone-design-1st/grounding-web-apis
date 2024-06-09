@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AdminLoginRequest {
-    private String userId;
+    private String userName;
     private String pw;
 }

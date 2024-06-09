@@ -1,4 +1,5 @@
 package org.example.first.groundingwebapis.entity;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.first.groundingwebapis.dto.NewsDto;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity

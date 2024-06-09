@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
@@ -98,7 +98,6 @@ jobs:
                 -e AWS_ACCESS_KEY='${{ secrets.AWS_ACCESS_KEY }}' \
                 -e AWS_SECRET_KEY='${{ secrets.AWS_SECRET_KEY }}' \
                 -e AWS_BUCKET_NAME='${{ secrets.AWS_BUCKET_NAME }}' \
-                -e AWS_ENDPOINT_OVERRIDE = '${{ secrets.AWS_ENDPOINT_OVERRIDE }}' \
                 -e AWS_REGION='${{ secrets.AWS_REGION }}' \
                 -e CLOUDFRONT_URL='${{ secrets.CLOUDFRONT_URL }}' \
                 ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.NEXT_WEB_VER }}

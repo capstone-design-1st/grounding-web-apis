@@ -113,7 +113,7 @@ public class PieceInvestment {
     private String leaseEndDate;
     public PieceInvestment(String type, String locate, Integer price, String otherInformation, Integer floors,
                            String useArea, String mainUse, double landArea, double totalArea, double buildingToRandRatio,
-                           double floor_area_ratio, LocalDateTime buildingDate, boolean automaticCloseFlag, Integer pricePerUnit, String assetType,
+                           double floor_area_ratio, LocalDateTime buildingDate, boolean automaticCloseFlag, Integer pricePerUnit, String investmentPoint, String assetType,
                            String entryStatus,String desiredPrice, Integer pieceCount, String leaseStartDate, String leaseEndDate,String assetImage, Long userId) {
         this.type = type;
         this.locate = locate;
@@ -130,6 +130,7 @@ public class PieceInvestment {
         this.automaticCloseFlag = automaticCloseFlag;
         this.date = LocalDateTime.now();
         this.pricePerUnit = pricePerUnit;
+        this.investmentPoint = investmentPoint;
         this.assetType = assetType;
         this.entryStatus = entryStatus;
         this.desiredPrice = desiredPrice;

@@ -10,6 +10,5 @@ import java.util.UUID;
 
 @Repository
 public interface NewsRepository extends JpaRepository<News, Long> {
-
     List<News> findByPieceInvestmentId(@Param("pieceInvestmentId") Long pieceInvestmentId);
 }

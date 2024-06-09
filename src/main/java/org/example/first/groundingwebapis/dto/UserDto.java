@@ -10,6 +10,7 @@ import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -69,6 +70,9 @@ public class UserDto {
         @NotBlank
         @Pattern(regexp = "^01[016-9]\\d{8}$", message = "유효하지 않은 전화번호입니다. 재시도해주세요.")
         private String phoneNumber;
+
+        @NotBlank
+        private String walletAddress;
 
     }
 
@@ -168,5 +172,13 @@ public class UserDto {
     @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
     public static class GetUserIdResponseDto {
         private Long userId;
+    }
+
+    @Getter
+    @Builder @NoArgsConstructor @AllArgsConstructor
+    @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+    public static class GetWalletAddressResponseDto {
+        private Long userId;
+        private String walletAddress;
     }
 }

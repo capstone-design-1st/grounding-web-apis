@@ -42,6 +42,9 @@ public class User {
     @Column(name = "role", length = 10)
     private Role role;
 
+    @Column(name = "wallet_address")
+    private String walletAddress;
+
     @Column(name = "asset_certificate_url")
     private String assetCertificateUrl;
 
@@ -61,13 +64,15 @@ public class User {
             String password,
             String phoneNumber,
             String name,
-            Role role) {
+            Role role,
+            String walletAddress) {
         this.userId = userId;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.name = name;
         this.role = role;
+        this.walletAddress = walletAddress;
     }
 
     public UserDto toDto() {

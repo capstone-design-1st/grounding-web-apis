@@ -65,7 +65,6 @@ spring:
     aws:
       region:
         static: ${AWS_REGION}
-        endpoint-override: ${AWS_ENDPOINT_OVERRIDE}
       credentials:
         access-key: ${AWS_ACCESS_KEY}
         secret-key: ${AWS_SECRET_KEY}
@@ -80,6 +79,7 @@ spring:
       max-file-size: 10MB
       max-request-size: 100MB
       enabled: true
+
   kafka:
     bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
 

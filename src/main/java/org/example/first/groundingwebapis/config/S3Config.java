@@ -7,6 +7,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
 
 import java.net.URI;
 import java.util.Optional;
@@ -23,14 +24,20 @@ public class S3Config {
     @Value("${AWS_REGION}")
     private String region;
 
+    @Value("${AWS_BUCKET_NAME}")
+    private String bucketName;
+
     @Bean
     public S3Client s3Client() {
-        String endpointOverride = Optional.ofNullable(System.getenv("AWS_ENDPOINT_OVERRIDE"))
-                .orElse("https://default-endpoint.amazonaws.com");
 
         return S3Client.builder()
                 .region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(AwsBasicCredentials.create(accessKey, secretAccessKey)))
                 .build();
+    }
+
+    @Bean
+    public String bucketName() {
+        return bucketName;
     }
 }

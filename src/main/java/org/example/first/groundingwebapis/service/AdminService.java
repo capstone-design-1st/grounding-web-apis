@@ -54,7 +54,7 @@ public class AdminService {
 
     @Transactional
     public boolean adminLogin(AdminLoginRequest request){
-        AdminUser byUserName = adminUserRepository.findByUserName(request.getUserId());
+        AdminUser byUserName = adminUserRepository.findByUserName(request.getUserName());
         return byUserName.getPassword().equals(request.getPw());
     }
 }
