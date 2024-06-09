@@ -111,10 +111,14 @@ public class PieceInvestment {
 
     @Column(name = "lease_end_date")
     private String leaseEndDate;
+
+    @Column(name = "wallet_address")
+    private String walletAddress;
+
     public PieceInvestment(String type, String locate, Integer price, String otherInformation, Integer floors,
                            String useArea, String mainUse, double landArea, double totalArea, double buildingToRandRatio,
                            double floor_area_ratio, LocalDateTime buildingDate, boolean automaticCloseFlag, Integer pricePerUnit, String investmentPoint, String assetType,
-                           String entryStatus,String desiredPrice, Integer pieceCount, String leaseStartDate, String leaseEndDate,String assetImage, Long userId) {
+                           String entryStatus,String desiredPrice, Integer pieceCount, String leaseStartDate, String leaseEndDate,String assetImage, String walletAddress, Long userId) {
         this.type = type;
         this.locate = locate;
         this.price = price;
@@ -138,6 +142,7 @@ public class PieceInvestment {
         this.leaseStartDate = leaseStartDate;
         this.leaseEndDate = leaseEndDate;
         this.assetImage = assetImage;
+        this.walletAddress = walletAddress;
         this.userId = userId;
     }
 
@@ -145,7 +150,7 @@ public class PieceInvestment {
                            String useArea, String mainUse, double landArea, double totalArea, double buildingToRandRatio,
                            double floor_area_ratio, LocalDateTime buildingDate, boolean automaticCloseFlag, String assetType,String entryStatus,
                              String landClassification,String recommendedUse,String desiredPrice,Integer pricePerUnit,String investmentPoint,
-                           String landImageRegistration,Integer pieceCount,String leaseStartDate, String leaseEndDate, String assetImage, Long userId) {
+                           String landImageRegistration,Integer pieceCount,String leaseStartDate, String leaseEndDate, String assetImage, String walletAddress, Long userId) {
         this.type = type;
         this.locate = locate;
         this.price = price;
@@ -172,6 +177,7 @@ public class PieceInvestment {
         this.leaseStartDate = leaseStartDate;
         this.leaseEndDate = leaseEndDate;
         this.assetImage = assetImage;
+        this.walletAddress = walletAddress;
         this.userId = userId;
     }
 
