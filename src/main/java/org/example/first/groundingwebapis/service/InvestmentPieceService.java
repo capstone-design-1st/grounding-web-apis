@@ -6,11 +6,7 @@ import org.example.first.groundingwebapis.exception.AlreadyPiecedException;
 import org.example.first.groundingwebapis.exception.CannotDeleteException;
 import org.example.first.groundingwebapis.repository.*;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,11 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.S3Exception;
-import software.amazon.awssdk.core.sync.RequestBody;
 
 @Slf4j
 @Service
@@ -53,7 +46,7 @@ public class InvestmentPieceService {
     private final NewsRepository newsRepository;
 
     @Transactional
-    public void setInvestmentPiece(InvestmentPieceRequest request){
+    public void setInvestmentPiece(InvestmentPieceRequest request, Long userId){
         var findByLocate = pieceInvestmentRepository.findByLocate(request.getLocation());
         if(findByLocate != null){
             throw new AlreadyPiecedException("이미 등록된 조각투자 입니다");
@@ -68,7 +61,7 @@ public class InvestmentPieceService {
                             request.getType(), request.getLocation(), request.getPrice(), request.getInfo(), request.getFloors()
                             ,request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
                             ,request.getBuilding_to_rand_ratio(), request.getFloor_area_ratio(), dateTime, request.isAutomatic_close_flag()
-                            ,request.getPricePerUnit(), request.getInvestmentPoint(), request.getAssetType(), request.getEntryStatus(), request.getDesiredPrice(), request.getPiece_count(), request.getLeaseStartDate(),request.getLeaseEndDate(), request.getAssetImage() , 1L /* TODO UserId 변경해야함 */
+                            ,request.getPricePerUnit(), request.getInvestmentPoint(), request.getAssetType(), request.getEntryStatus(), request.getDesiredPrice(), request.getPiece_count(), request.getLeaseStartDate(),request.getLeaseEndDate(), request.getAssetImage() , userId /* TODO UserId 변경해야함 */
                     )
             );
         }else{
@@ -78,23 +71,23 @@ public class InvestmentPieceService {
                             ,request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
                             ,request.getBuilding_to_rand_ratio(), request.getFloor_area_ratio(), dateTime, request.isAutomatic_close_flag()
                             ,request.getAssetType(), request.getEntryStatus(), request.getLandClassification()
-                            ,request.getRecommendedUse(), request.getDesiredPrice(),request.getPricePerUnit(),request.getInvestmentPoint(), request.getLandImageRegistration(), request.getPiece_count(), request.getLeaseStartDate(),request.getLeaseEndDate(), request.getAssetImage(), 1L /* TODO UserId 변경해야함 */
+                            ,request.getRecommendedUse(), request.getDesiredPrice(),request.getPricePerUnit(),request.getInvestmentPoint(), request.getLandImageRegistration(), request.getPiece_count(), request.getLeaseStartDate(),request.getLeaseEndDate(), request.getAssetImage(), userId /* TODO UserId 변경해야함 */
                     )
             );
         }
     }
 
     @Transactional
-    public Map<String, String> setFiles(Long pieceInvestmentId, MultipartFile file, MultipartFile[] files) throws IOException {
+    public Map<String, String> setFiles(Long pieceInvestmentId, MultipartFile file, MultipartFile[] files, Long userId) throws IOException {
         Map<String, String> result = new HashMap<>();
         String pdfUrlInfo = awsFileTransfer(file);
         result.put("PDF", pdfUrlInfo);
-        assetFilesRepository.save(new AssetFiles(1L, pieceInvestmentId, "PDF", pdfUrlInfo));
+        assetFilesRepository.save(new AssetFiles(userId, pieceInvestmentId, "PDF", pdfUrlInfo));
 
         int i = 0;
         for (MultipartFile image : files) {
             String imageUrlInfo = awsFileTransfer(image);
-            assetFilesRepository.save(new AssetFiles(1L, pieceInvestmentId, "IMAGE" + String.valueOf(i), imageUrlInfo));
+            assetFilesRepository.save(new AssetFiles(userId, pieceInvestmentId, "IMAGE" + String.valueOf(i), imageUrlInfo));
             result.put("IMAGE" + String.valueOf(i), imageUrlInfo);
             i++;
         }

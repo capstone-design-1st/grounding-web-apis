@@ -9,7 +9,6 @@ import org.example.first.groundingwebapis.repository.PieceInvestmentRepository;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +42,8 @@ public class MainService {
     }
 
     @Transactional(readOnly = true)
-    public MainMyResponse getMySaleStatusList(){
-        var pieceInvestments = pieceInvestmentRepository.findByUserId(1L);
+    public MainMyResponse getMySaleStatusList(Long userId){
+        var pieceInvestments = pieceInvestmentRepository.findByUserId(userId);
         List<AssetFiles> thumbnailImage = new ArrayList<>();
         var topRecentInvestments = pieceInvestments.stream()
                 .sorted(Comparator.comparing(PieceInvestment::getDate).reversed())
@@ -96,7 +95,7 @@ public class MainService {
     }
 
     @Transactional(readOnly = true)
-    public MainStatusResponse getMainStatus(){
+    public MainStatusResponse getMainStatus(Long userId){
         var pieceInvestment = pieceInvestmentRepository.findAll();
         List<MainStatusSubResponse> notCompleted = new ArrayList<>();
         List<MainStatusCompSubResponse> completed = new ArrayList();
@@ -106,11 +105,11 @@ public class MainService {
                 complete.setInvestment_piece_id(a.getPieceInvestmentId());
                 complete.setName(a.getName());
                 complete.setPrice(a.getPrice());
-                complete.setReturns(investmentStatusRepository.findByUserId(1L).getInvestmentReturn().toString() + "%");
+                complete.setReturns(investmentStatusRepository.findByUserId(userId).getInvestmentReturn().toString() + "%");
                 completed.add(complete);
             } else {
                 MainStatusSubResponse notComp = new MainStatusSubResponse();
-                var total =  investmentStatusRepository.findByUserId(1L).getSelledTotalCount();
+                var total =  investmentStatusRepository.findByUserId(userId).getSelledTotalCount();
                 var resCount = a.getPieceCount() - total;
                 var rate = (double) total / resCount;
                 notComp.setName(a.getName());
