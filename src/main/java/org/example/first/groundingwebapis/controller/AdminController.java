@@ -21,8 +21,6 @@ import java.util.List;
 public class AdminController {
 
     private final AdminService adminService;
-    private final KafkaTemplate<String, String> kafkaTemplate;
-
 
     @GetMapping("/assets")
     public ResponseEntity<List<AdminAssetFileListsResponse>> getAssetFileLists(){
@@ -32,9 +30,6 @@ public class AdminController {
     @PostMapping("/assets")
     public ResponseEntity<Void> setAssetYn(@RequestBody AdminAssetYnRequest request){
         adminService.setAssetYn(request);
-
-        // 자산 상태 변경을 Kafka에 전송
-        kafkaTemplate.send("asset-approved-topic", "Asset approved: " + request.toString());
 
         return ResponseEntity.ok().build();
     }

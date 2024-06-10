@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class TransferToAppDto {
+
     // From InvestmentPieceRequest
     private String type;
     private String location;
@@ -31,8 +32,8 @@ public class TransferToAppDto {
     private Integer floorAreaRatio;
     private String buildingDate;
     private boolean automaticCloseFlag;
-    private String assetType; // ESTATE, LAND
-    private String entryStatus; // Y , N
+    private String assetType;
+    private String entryStatus;
     private String landClassification;
     private String recommendedUse;
     private String desiredPrice;
@@ -44,16 +45,7 @@ public class TransferToAppDto {
     private String assetImage;
     private String assetCertificateUrl;
 
-    // From AdminAssetFileListsResponse
-    private Long assetFileId;
-    private Long userId;
-    private String documentType;
-    private String fileName;
-    private String adminYn;
-
     // From NewsDto
-    private Long newsId;
-    private Long pieceInvestmentId;
     private String newsTitle;
     private String reportedAt;
     private String publisher;
@@ -67,8 +59,7 @@ public class TransferToAppDto {
                          String mainUse, double landArea, double totalArea, double buildingToRandRatio, Integer floorAreaRatio,
                          String buildingDate, boolean automaticCloseFlag, String assetType, String entryStatus, String landClassification,
                          String recommendedUse, String desiredPrice, Integer pricePerUnit, String investmentPoint, String landImageRegistration,
-                         String leaseStartDate, String leaseEndDate, String assetImage, String assetCertificateUrl, Long assetFileId,
-                         Long userId, String documentType, String fileName, String adminYn, Long newsId, Long pieceInvestmentId,
+                         String leaseStartDate, String leaseEndDate, String assetImage, String assetCertificateUrl,
                          String newsTitle, String reportedAt, String publisher, List<AssetFiles> thumbnailImage) {
         this.type = type;
         this.location = location;
@@ -96,13 +87,6 @@ public class TransferToAppDto {
         this.leaseEndDate = leaseEndDate;
         this.assetImage = assetImage;
         this.assetCertificateUrl = assetCertificateUrl;
-        this.assetFileId = assetFileId;
-        this.userId = userId;
-        this.documentType = documentType;
-        this.fileName = fileName;
-        this.adminYn = adminYn;
-        this.newsId = newsId;
-        this.pieceInvestmentId = pieceInvestmentId;
         this.newsTitle = newsTitle != null ? newsTitle : "";
         this.reportedAt = reportedAt != null ? reportedAt : LocalDate.now().format(DateTimeFormatter.ISO_DATE);
         this.publisher = publisher != null ? publisher : "";

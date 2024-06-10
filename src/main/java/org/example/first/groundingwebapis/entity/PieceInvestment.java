@@ -37,9 +37,6 @@ public class PieceInvestment {
     @Column(name = "price", nullable = false)
     private Integer price;
 
-    @Column(name = "asset_certificate_url")
-    private String assetCertificateUrl;
-
     @Column(name = "other_information")
     private String otherInformation;
 
@@ -115,10 +112,14 @@ public class PieceInvestment {
     @Column(name = "wallet_address")
     private String walletAddress;
 
+    @Column(name = "asset_certificate_url")
+    private String assetCertificateUrl;
+
+
     public PieceInvestment(String type, String locate, Integer price, String otherInformation, Integer floors,
                            String useArea, String mainUse, double landArea, double totalArea, double buildingToRandRatio,
                            double floor_area_ratio, LocalDateTime buildingDate, boolean automaticCloseFlag, Integer pricePerUnit, String investmentPoint, String assetType,
-                           String entryStatus,String desiredPrice, Integer pieceCount, String leaseStartDate, String leaseEndDate,String assetImage, String walletAddress, Long userId) {
+                           String entryStatus,String desiredPrice, Integer pieceCount, String leaseStartDate, String leaseEndDate,String assetImage, String walletAddress, String assetCertificateUrl, Long userId) {
         this.type = type;
         this.locate = locate;
         this.price = price;
@@ -143,6 +144,7 @@ public class PieceInvestment {
         this.leaseEndDate = leaseEndDate;
         this.assetImage = assetImage;
         this.walletAddress = walletAddress;
+        this.assetCertificateUrl = assetCertificateUrl;
         this.userId = userId;
     }
 
@@ -150,7 +152,7 @@ public class PieceInvestment {
                            String useArea, String mainUse, double landArea, double totalArea, double buildingToRandRatio,
                            double floor_area_ratio, LocalDateTime buildingDate, boolean automaticCloseFlag, String assetType,String entryStatus,
                              String landClassification,String recommendedUse,String desiredPrice,Integer pricePerUnit,String investmentPoint,
-                           String landImageRegistration,Integer pieceCount,String leaseStartDate, String leaseEndDate, String assetImage, String walletAddress, Long userId) {
+                           String landImageRegistration,Integer pieceCount,String leaseStartDate, String leaseEndDate, String assetImage, String walletAddress, String assetCertificateUrl,  Long userId) {
         this.type = type;
         this.locate = locate;
         this.price = price;
@@ -178,6 +180,7 @@ public class PieceInvestment {
         this.leaseEndDate = leaseEndDate;
         this.assetImage = assetImage;
         this.walletAddress = walletAddress;
+        this.assetCertificateUrl = assetCertificateUrl;
         this.userId = userId;
     }
 

@@ -32,7 +32,6 @@ public class AdminService {
 
     private final AssetFilesRepository assetFilesRepository;
     private final AdminUserRepository adminUserRepository;
-    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Transactional(readOnly = true)
     public List<AdminAssetFileListsResponse> getAssetFileLists(){
@@ -48,8 +47,6 @@ public class AdminService {
     public void setAssetYn(AdminAssetYnRequest request){
         var file = assetFilesRepository.findById(request.getAssetFileId()).get();
         file.updateYn(request.getAdminYn());
-
-        kafkaTemplate.send("asset-approved-topic", "Asset approved: " + file.toString());
     }
 
     @Transactional
