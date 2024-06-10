@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.first.groundingwebapis.dto.JwtDto;
 import org.example.first.groundingwebapis.dto.UserDto;
 import org.example.first.groundingwebapis.entity.User;
+import org.example.first.groundingwebapis.entity.Role;
 import org.example.first.groundingwebapis.exception.UserErrorResult;
 import org.example.first.groundingwebapis.exception.UserException;
 import org.example.first.groundingwebapis.repository.UserRepository;
@@ -87,6 +88,7 @@ public class UserServiceImpl implements UserService {
                     .password(passwordEncoder.encode(signUpRequestDto.getPassword()))
                     .name(signUpRequestDto.getName())
                     .phoneNumber(signUpRequestDto.getPhoneNumber())
+                    .role(Role.USER)
                     .walletAddress(signUpRequestDto.getWalletAddress())
                     .build();
             userRepository.save(user);
