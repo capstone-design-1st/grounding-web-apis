@@ -28,10 +28,10 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 @RequiredArgsConstructor
 public class InvestmentPieceService {
 
-    @Value("AWS_BUCKET_NAME")
+    @Value("${spring.cloud.aws.s3.bucket}")
     private String bucketName;
 
-    @Value("CLOUDFRONT_URL")
+    @Value("${spring.cloud.aws.cloudfront.distribution-domain}")
     private String cloudFrontUrl;
 
     private final S3Client s3Client;
