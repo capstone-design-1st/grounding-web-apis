@@ -177,6 +177,11 @@ public class InvestmentPieceService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void setNews(Long pieceInvestmentId, String title, String publisher, String reportedAt) {
+        newsRepository.save(new News(pieceInvestmentId, title, publisher, reportedAt));
+    }
+
     @Transactional(readOnly = true)
     public List<DisclosureResponse> getDisclosureList(Long pieceInvestmentId){
         List<Disclosure> lists = disclosureRepository.findByPieceInvestmentId(pieceInvestmentId);
@@ -191,11 +196,6 @@ public class InvestmentPieceService {
     @Transactional
     public void setDisclosure(Long pieceInvestmentId, String assetAddress, String assetName, String disclosureTitle, String disclosureContent) throws IOException {
         disclosureRepository.save(new Disclosure(pieceInvestmentId, assetAddress, assetName, disclosureTitle, disclosureContent));
-    }
-
-    @Transactional
-    public void setNews(Long pieceInvestmentId, String title, String publisher, String reportedAt) {
-        newsRepository.save(new News(pieceInvestmentId, title, publisher, reportedAt));
     }
 
     @Transactional
