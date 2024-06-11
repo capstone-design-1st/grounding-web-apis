@@ -25,11 +25,11 @@ public class InvestmentPieceController {
 
 
     @PostMapping
-    public ResponseEntity<Long> setInvestmentPiece(@RequestBody InvestmentPieceRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal, Long userId) {
+    public ResponseEntity<Long> setInvestmentPiece(@RequestBody InvestmentPieceRequest request, @RequestPart("piece_investment_id") Long pieceInvestmentId, @AuthenticationPrincipal UserPrincipal userPrincipal, Long userId) {
         userId = userPrincipal.getUser().getUserId();
-        Long investmentPieceId = investmentPieceService.setInvestmentPiece(request, userId);
+        pieceInvestmentId = investmentPieceService.setInvestmentPiece(request, userId);
         investmentPieceService.setInvestmentPiece(request, userId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(investmentPieceId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(pieceInvestmentId);
     }
 
     @PostMapping(value ="/asset-file",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
