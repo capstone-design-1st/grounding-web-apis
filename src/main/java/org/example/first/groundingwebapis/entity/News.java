@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.first.groundingwebapis.dto.NewsDto;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -41,7 +40,7 @@ public class News {
 
 
     @Builder
-    public News(String title,
+    public News(Long pieceInvestmentId, String title,
                 String reportedAt,
                 String publisher) {
         this.title = title;

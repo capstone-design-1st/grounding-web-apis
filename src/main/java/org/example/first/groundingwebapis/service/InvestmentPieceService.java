@@ -194,6 +194,11 @@ public class InvestmentPieceService {
     }
 
     @Transactional
+    public void setNews(Long pieceInvestmentId, String title, String publisher, String reportedAt) {
+        newsRepository.save(new News(pieceInvestmentId, title, publisher, reportedAt));
+    }
+
+    @Transactional
     public void updateDisclosure(Long disclosureId, Long pieceInvestmentId, String assetAddress, String assetName, String disclosureTitle, String disclosureContent) throws IOException {
         var disclosure = disclosureRepository.findById(disclosureId).get();
         disclosure.updateDisclosure(pieceInvestmentId, assetAddress, assetName, disclosureTitle, disclosureContent);
@@ -262,4 +267,5 @@ public class InvestmentPieceService {
         subDto.setName(pieceInvestment.getName());
         return subDto;
     }
+
 }

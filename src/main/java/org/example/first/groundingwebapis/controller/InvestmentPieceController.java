@@ -70,6 +70,15 @@ public class InvestmentPieceController {
         return ResponseEntity.ok(investmentPieceService.getNewsList(id));
     }
 
+    @PostMapping("/news")
+    public ResponseEntity<Void> setNews(@RequestPart("piece_investment_id") Long pieceInvestmentId,
+                                              @RequestPart("title") String title,
+                                              @RequestPart("publisher") String publisher,
+                                              @RequestPart("reportedAt") String reportedAt) throws IOException {
+        investmentPieceService.setNews(pieceInvestmentId, title, publisher, reportedAt);
+        return ResponseEntity.ok().build();
+    }
+
     // 공시조회
     @GetMapping("/disclosure/{piece-investment-id}")
     public ResponseEntity<List<DisclosureResponse>> getDisclosureList(@PathVariable(name = "piece-investment-id") Long id){
