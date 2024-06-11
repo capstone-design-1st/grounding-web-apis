@@ -37,7 +37,5 @@ public class KafkaUserInfoProducerServiceImpl implements KafkaUserInfoProducerSe
         }
 
         kafkaProducer.send(topic, userJsonString);
-
-
     }
 }
