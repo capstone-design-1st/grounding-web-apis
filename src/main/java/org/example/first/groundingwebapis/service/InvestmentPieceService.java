@@ -47,7 +47,7 @@ public class InvestmentPieceService {
     private final NewsRepository newsRepository;
 
     @Transactional
-    public Long setInvestmentPiece(InvestmentPieceRequest request, Long userId){
+    public void setInvestmentPiece(InvestmentPieceRequest request, Long userId){
         var findByLocate = pieceInvestmentRepository.findByLocate(request.getLocation());
         if(findByLocate != null){
             throw new AlreadyPiecedException("이미 등록된 조각투자 입니다");
@@ -56,9 +56,8 @@ public class InvestmentPieceService {
         LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
         LocalDateTime dateTime = date.atStartOfDay();
 
-        PieceInvestment savedPieceInvestment;
         if(request.getType().equals("ESTATES")){
-            savedPieceInvestment = pieceInvestmentRepository.save(
+            pieceInvestmentRepository.save(
                     new PieceInvestment(
                             request.getType(), request.getLocation(), request.getPrice(), request.getInfo(), request.getFloors()
                             ,request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
@@ -67,7 +66,7 @@ public class InvestmentPieceService {
                     )
             );
         }else{
-            savedPieceInvestment = pieceInvestmentRepository.save(
+            pieceInvestmentRepository.save(
                     new PieceInvestment(
                             request.getType(), request.getLocation(), request.getPrice(), request.getInfo(), request.getFloors()
                             ,request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
@@ -77,7 +76,6 @@ public class InvestmentPieceService {
                     )
             );
         }
-        return savedPieceInvestment.getUserId();
     }
 
     @Transactional
