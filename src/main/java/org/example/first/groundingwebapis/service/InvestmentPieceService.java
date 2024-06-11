@@ -56,9 +56,8 @@ public class InvestmentPieceService {
         LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
         LocalDateTime dateTime = date.atStartOfDay();
 
-        PieceInvestment savedPiece;
         if(request.getType().equals("ESTATES")){
-            savedPiece = pieceInvestmentRepository.save(
+            var res = pieceInvestmentRepository.save(
                     new PieceInvestment(
                             request.getType(), request.getLocation(), request.getPrice(), request.getInfo(), request.getFloors()
                             ,request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
@@ -66,8 +65,9 @@ public class InvestmentPieceService {
                             ,request.getPricePerUnit(), request.getInvestmentPoint(), request.getAssetType(), request.getEntryStatus(), request.getDesiredPrice(), request.getPiece_count(), request.getLeaseStartDate(),request.getLeaseEndDate(), request.getAssetImage() , request.getWalletAddress(), request.getAssetCertificateUrl(), request.getAssetName(), userId
                     )
             );
+            return res.getPieceInvestmentId();
         }else{
-            savedPiece = pieceInvestmentRepository.save(
+            var res = pieceInvestmentRepository.save(
                     new PieceInvestment(
                             request.getType(), request.getLocation(), request.getPrice(), request.getInfo(), request.getFloors()
                             ,request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
@@ -76,8 +76,8 @@ public class InvestmentPieceService {
                             ,request.getRecommendedUse(), request.getDesiredPrice(),request.getPricePerUnit(),request.getInvestmentPoint(), request.getLandImageRegistration(), request.getPiece_count(), request.getLeaseStartDate(),request.getLeaseEndDate(), request.getAssetImage(), request.getWalletAddress(), request.getAssetCertificateUrl(), request.getAssetName(), userId
                     )
             );
+            return res.getPieceInvestmentId();
         }
-        return savedPiece.getUserId();
     }
 
     @Transactional

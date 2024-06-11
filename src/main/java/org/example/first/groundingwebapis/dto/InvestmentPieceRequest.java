@@ -43,5 +43,5 @@ public class InvestmentPieceRequest {
     private String assetCertificateUrl;
     private String walletAddress;
     private String assetName;
-    private Long pieceInvestmentId;
+    //private Long pieceInvestmentId;
 }
