@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 public class InvestmentPieceListSubResponse {
 
     private String investedPieceId;
-    private String name;
+    private String assetName;
     private boolean salesCompleted;
 }

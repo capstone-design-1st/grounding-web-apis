@@ -47,7 +47,7 @@ public class InvestmentPieceService {
     private final NewsRepository newsRepository;
 
     @Transactional
-    public void setInvestmentPiece(InvestmentPieceRequest request, Long userId){
+    public Long setInvestmentPiece(InvestmentPieceRequest request, Long userId){
         var findByLocate = pieceInvestmentRepository.findByLocate(request.getLocation());
         if(findByLocate != null){
             throw new AlreadyPiecedException("이미 등록된 조각투자 입니다");
@@ -56,8 +56,9 @@ public class InvestmentPieceService {
         LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
         LocalDateTime dateTime = date.atStartOfDay();
 
+        PieceInvestment savedPieceInvestment;
         if(request.getType().equals("ESTATES")){
-            pieceInvestmentRepository.save(
+            savedPieceInvestment = pieceInvestmentRepository.save(
                     new PieceInvestment(
                             request.getType(), request.getLocation(), request.getPrice(), request.getInfo(), request.getFloors()
                             ,request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
@@ -66,7 +67,7 @@ public class InvestmentPieceService {
                     )
             );
         }else{
-            pieceInvestmentRepository.save(
+            savedPieceInvestment = pieceInvestmentRepository.save(
                     new PieceInvestment(
                             request.getType(), request.getLocation(), request.getPrice(), request.getInfo(), request.getFloors()
                             ,request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
@@ -76,6 +77,7 @@ public class InvestmentPieceService {
                     )
             );
         }
+        return savedPieceInvestment.getUserId();
     }
 
     @Transactional
@@ -264,7 +266,7 @@ public class InvestmentPieceService {
         InvestmentPieceListSubResponse subDto = new InvestmentPieceListSubResponse();
         subDto.setInvestedPieceId(pieceInvestment.getPieceInvestmentId().toString());
         subDto.setSalesCompleted(pieceInvestment.isSaleCompleted());
-        subDto.setName(pieceInvestment.getName());
+        subDto.setAssetName(pieceInvestment.getName());
         return subDto;
     }
 
