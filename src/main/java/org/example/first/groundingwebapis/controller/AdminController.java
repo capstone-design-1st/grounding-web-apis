@@ -26,7 +26,7 @@ public class AdminController {
     }
 
     @PostMapping("/assets")
-    public ResponseEntity<Void> setAssetYn(@RequestBody AdminAssetYnRequest request){
+    public ResponseEntity<Void> setAssetYn(@RequestBody AdminAssetYnRequest request) throws Exception {
         adminService.setAssetYn(request);
         return ResponseEntity.ok().build();
     }

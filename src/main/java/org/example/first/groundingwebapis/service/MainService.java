@@ -43,7 +43,15 @@ public class MainService {
 
     @Transactional(readOnly = true)
     public MainMyResponse getMySaleStatusList(Long userId){
-        var pieceInvestments = pieceInvestmentRepository.findByUserId(userId);
+        var pieceInvestmentsAll = pieceInvestmentRepository.findByUserId(userId);
+        List<PieceInvestment> pieceInvestments = new ArrayList<>();
+        for(PieceInvestment p : pieceInvestmentsAll){
+            var pdf = assetFilesRepository.findByPieceInvestmentIdAndDocumentType(p.getPieceInvestmentId(), "PDF");
+            if(pdf.getAdminYn().equals("Y")){
+                pieceInvestments.add(p);
+            }
+        }
+
         List<AssetFiles> thumbnailImage = new ArrayList<>();
         var topRecentInvestments = pieceInvestments.stream()
                 .sorted(Comparator.comparing(PieceInvestment::getDate).reversed())

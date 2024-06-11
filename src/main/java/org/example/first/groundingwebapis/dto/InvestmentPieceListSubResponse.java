@@ -16,5 +16,5 @@ public class InvestmentPieceListSubResponse {
 
     private String investedPieceId;
     private String assetName;
-    private boolean salesCompleted;
+    //private boolean salesCompleted;
 }

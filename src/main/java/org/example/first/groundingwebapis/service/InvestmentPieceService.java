@@ -107,7 +107,14 @@ public class InvestmentPieceService {
 
     @Transactional(readOnly = true)
     public InvestmentPieceListResponse getListedList(){
-        var pieceInvestments = pieceInvestmentRepository.findAll();
+        var pieceInvestmentsAll = pieceInvestmentRepository.findAll();
+        List<PieceInvestment> pieceInvestments = new ArrayList<>();
+        for(PieceInvestment p : pieceInvestmentsAll){
+            var pdf = assetFilesRepository.findByPieceInvestmentIdAndDocumentType(p.getPieceInvestmentId(), "PDF");
+            if(pdf.getAdminYn().equals("Y")){
+                pieceInvestments.add(p);
+            }
+        }
 
         var lands = pieceInvestments.stream()
                 .filter(piece -> "LAND".equals(piece.getAssetType()))
@@ -222,7 +229,14 @@ public class InvestmentPieceService {
 
     @Transactional(readOnly = true)
     public InvestmentPieceListResponse getApprovedPieceInvestmentInfoResponse(){
-        var pieceInvestments = pieceInvestmentRepository.findApprovedInfos();
+        var pieceInvestmentsAll = pieceInvestmentRepository.findApprovedInfos();
+        List<PieceInvestment> pieceInvestments = new ArrayList<>();
+        for(PieceInvestment p : pieceInvestmentsAll){
+            var pdf = assetFilesRepository.findByPieceInvestmentIdAndDocumentType(p.getPieceInvestmentId(), "PDF");
+            if(pdf.getAdminYn().equals("Y")){
+                pieceInvestments.add(p);
+            }
+        }
 
         var lands = pieceInvestments.stream()
                 .filter(piece -> "LAND".equals(piece.getAssetType()))
@@ -263,8 +277,8 @@ public class InvestmentPieceService {
     private InvestmentPieceListSubResponse convertToSubDto(PieceInvestment pieceInvestment) {
         InvestmentPieceListSubResponse subDto = new InvestmentPieceListSubResponse();
         subDto.setInvestedPieceId(pieceInvestment.getPieceInvestmentId().toString());
-        subDto.setSalesCompleted(pieceInvestment.isSaleCompleted());
-        subDto.setAssetName(pieceInvestment.getName());
+        //subDto.setSalesCompleted(pieceInvestment.isSaleCompleted());
+        subDto.setAssetName(pieceInvestment.getAssetName());
         return subDto;
     }
 
