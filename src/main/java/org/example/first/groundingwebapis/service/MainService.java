@@ -135,7 +135,7 @@ public class MainService {
         MainSubResponse subDto = new MainSubResponse();
         subDto.setInvestment_piece_id(pieceInvestment.getPieceInvestmentId().toString());
         subDto.setRegister_date(pieceInvestment.getDate().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString());
-        subDto.setAssetName(pieceInvestment.getAssetName());
+        subDto.setName(pieceInvestment.getName());
         return subDto;
     }
 }

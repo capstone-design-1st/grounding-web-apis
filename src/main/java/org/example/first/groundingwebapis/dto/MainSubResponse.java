@@ -15,5 +15,5 @@ public class MainSubResponse {
 
     private String investment_piece_id;
     private String register_date;
-    private String assetName;
+    private String name;
 }
