@@ -179,4 +179,11 @@ public class UserDto {
         private Long userId;
         private String walletAddress;
     }
+
+    @Getter
+    @Builder @NoArgsConstructor @AllArgsConstructor
+    @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+    public static class SetPropertyResponseDto{
+        private Long propertyId;
+    }
 }

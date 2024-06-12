@@ -28,11 +28,17 @@ public class InvestmentPieceController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping
-    public ResponseEntity<Long> setInvestmentPiece(@RequestBody InvestmentPieceRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ResponseEntity<UserDto.SetPropertyResponseDto> setInvestmentPiece(@RequestBody InvestmentPieceRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         Long userId = userPrincipal.getUser().getUserId();
         //Long pieceInvestmentId = investmentPieceService.setInvestmentPiece(request, userId);
         //return ResponseEntity.status(HttpStatus.CREATED).body(pieceInvestmentId);
-        return ResponseEntity.ok(investmentPieceService.setInvestmentPiece(request, userId));
+        Long propertyId = investmentPieceService.setInvestmentPiece(request, userId);
+
+        UserDto.SetPropertyResponseDto response = UserDto.SetPropertyResponseDto.builder()
+                .propertyId(propertyId)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PreAuthorize("isAuthenticated()")
