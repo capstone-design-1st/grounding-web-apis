@@ -52,7 +52,7 @@ public class InvestmentPieceService {
         if(findByLocate != null){
             throw new AlreadyPiecedException("이미 등록된 조각투자 입니다");
         }
-        String dateString = request.getBuilding_date();
+        String dateString = String.valueOf(request.getBuilding_date());
         LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
         LocalDateTime dateTime = date.atStartOfDay();
 
@@ -312,7 +312,7 @@ public class InvestmentPieceService {
         subDto.setTotal_area(pieceInvestment.getTotalArea());
         subDto.setBuilding_to_rand_ratio(pieceInvestment.getBuildingToRandRatio());
         subDto.setFloor_area_ratio(pieceInvestment.getFloorAreaRatio());
-        subDto.setBuilding_date(String.valueOf(pieceInvestment.getBuildingDate()));
+        subDto.setBuilding_date(pieceInvestment.getBuildingDate());
         subDto.setAutomatic_close_flag(pieceInvestment.isAutomaticCloseFlag());
         subDto.setAssetImage(pieceInvestment.getAssetImage());
         subDto.setEntryStatus(pieceInvestment.getEntryStatus());

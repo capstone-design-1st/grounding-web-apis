@@ -3,6 +3,8 @@ package org.example.first.groundingwebapis.dto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,7 +31,7 @@ public class InvestmentPieceListSubResponse {
     private double total_area;
     private double building_to_rand_ratio;
     private double floor_area_ratio;
-    private String building_date;
+    private LocalDateTime building_date;
     private boolean automatic_close_flag;
     private String assetType; // ESTATE, LAND
     private String entryStatus; // Y , N
