@@ -47,33 +47,33 @@ public class InvestmentPieceService {
     private final NewsRepository newsRepository;
 
     @Transactional
-    public Long setInvestmentPiece(InvestmentPieceRequest request, Long userId){
+    public Long setInvestmentPiece(InvestmentPieceRequest request, Long userId) {
         var findByLocate = pieceInvestmentRepository.findByLocate(request.getLocation());
-        if(findByLocate != null){
+        if (findByLocate != null) {
             throw new AlreadyPiecedException("이미 등록된 조각투자 입니다");
         }
         String dateString = String.valueOf(request.getBuilding_date());
         LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
         LocalDateTime dateTime = date.atStartOfDay();
 
-        if(request.getType().equals("ESTATES")){
+        if (request.getType().equals("ESTATES")) {
             var res = pieceInvestmentRepository.save(
                     new PieceInvestment(
                             request.getType(), request.getLocation(), request.getPrice(), request.getInfo(), request.getFloors()
-                            ,request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
-                            ,request.getBuilding_to_rand_ratio(), request.getFloor_area_ratio(), dateTime, request.isAutomatic_close_flag()
-                            ,request.getPricePerUnit(), request.getInvestmentPoint(), request.getAssetType(), request.getEntryStatus(), request.getDesiredPrice(), request.getPiece_count(), request.getLeaseStartDate(),request.getLeaseEndDate(), request.getAssetImage() , request.getWalletAddress(), request.getAssetCertificateUrl(), request.getAssetName(), userId
+                            , request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
+                            , request.getBuilding_to_rand_ratio(), request.getFloor_area_ratio(), dateTime, request.isAutomatic_close_flag()
+                            , request.getPricePerUnit(), request.getInvestmentPoint(), request.getAssetType(), request.getEntryStatus(), request.getDesiredPrice(), request.getPiece_count(), request.getLeaseStartDate(), request.getLeaseEndDate(), request.getAssetImage(), request.getWalletAddress(), request.getAssetCertificateUrl(), request.getAssetName(), userId
                     )
             );
             return res.getPieceInvestmentId();
-        }else{
+        } else {
             var res = pieceInvestmentRepository.save(
                     new PieceInvestment(
                             request.getType(), request.getLocation(), request.getPrice(), request.getInfo(), request.getFloors()
-                            ,request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
-                            ,request.getBuilding_to_rand_ratio(), request.getFloor_area_ratio(), dateTime, request.isAutomatic_close_flag()
-                            ,request.getAssetType(), request.getEntryStatus(), request.getLandClassification()
-                            ,request.getRecommendedUse(), request.getDesiredPrice(),request.getPricePerUnit(),request.getInvestmentPoint(), request.getLandImageRegistration(), request.getPiece_count(), request.getLeaseStartDate(),request.getLeaseEndDate(), request.getAssetImage(), request.getWalletAddress(), request.getAssetCertificateUrl(), request.getAssetName(), userId
+                            , request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
+                            , request.getBuilding_to_rand_ratio(), request.getFloor_area_ratio(), dateTime, request.isAutomatic_close_flag()
+                            , request.getAssetType(), request.getEntryStatus(), request.getLandClassification()
+                            , request.getRecommendedUse(), request.getDesiredPrice(), request.getPricePerUnit(), request.getInvestmentPoint(), request.getLandImageRegistration(), request.getPiece_count(), request.getLeaseStartDate(), request.getLeaseEndDate(), request.getAssetImage(), request.getWalletAddress(), request.getAssetCertificateUrl(), request.getAssetName(), userId
                     )
             );
             return res.getPieceInvestmentId();
@@ -108,50 +108,51 @@ public class InvestmentPieceService {
     }
 
     @Transactional(readOnly = true)
-    public InvestmentPieceListResponse getListedList(){
+    public InvestmentPieceListResponse getListedList() {
         var pieceInvestmentsAll = pieceInvestmentRepository.findAll();
         List<PieceInvestment> pieceInvestments = new ArrayList<>();
-        for(PieceInvestment p : pieceInvestmentsAll){
+        for (PieceInvestment p : pieceInvestmentsAll) {
             var pdf = assetFilesRepository.findByPieceInvestmentIdAndDocumentType(p.getPieceInvestmentId(), "PDF");
-            if(pdf.getAdminYn().equals("Y")){
+            if (pdf.getAdminYn().equals("Y")) {
                 pieceInvestments.add(p);
             }
         }
 
         var lands = pieceInvestments.stream()
                 .filter(piece -> "LAND".equals(piece.getAssetType()))
-                .map(this::convertToSubDtoForLand)
+                .map(this::convertToSubDto)
                 .collect(Collectors.toList());
 
         var estates = pieceInvestments.stream()
                 .filter(piece -> "ESTATE".equals(piece.getAssetType()))
-                .map(this::convertToSubDtoForEstate)
+                .map(this::convertToSubDto)
                 .collect(Collectors.toList());
 
         return new InvestmentPieceListResponse(estates, lands);
     }
 
     @Transactional
-    public void deleteListedList(InvestmentPieceListDeleteRequest request, String id){
+    public void deleteListedList(InvestmentPieceListDeleteRequest request, String id) {
         var pieceInvestment = pieceInvestmentRepository.findById(Long.parseLong(id));
         var userInfo = userRepository.findById(pieceInvestment.get().getUserId());
-        if(!userInfo.get().getPassword().equals(request.getPw())){
+        if (!userInfo.get().getPassword().equals(request.getPw())) {
             throw new CannotDeleteException("삭제 불가능한 조각판매 입니다.");
         }
         pieceInvestmentRepository.delete(pieceInvestment.get());
     }
 
     @Transactional(readOnly = true)
-    public NotificationDetailResponse getNotificationDetail(String orderPieceId){
+    public NotificationDetailResponse getNotificationDetail(String orderPieceId) {
         var orderPiece = orderPieceRepository.findById(Long.parseLong(orderPieceId)).get();
         var order = orderRepository.findByTypeAndId("구매", orderPiece.getOrderId());
         var user = userRepository.findById(Long.parseLong(order.getUserId())).get();
         var notification = notificationRepository.findByOrderPieceId(Long.parseLong(orderPieceId));
         return new NotificationDetailResponse(new NotificationDetailSubResponse(Long.parseLong(orderPieceId), user.getName(), order.getType(),
-                user.getName() + "님이 " + order.getCount()+ "개 구매했습니다.", order.getCount(), LocalDateTime.now(), Integer.parseInt(order.getTotalPrice())));
+                user.getName() + "님이 " + order.getCount() + "개 구매했습니다.", order.getCount(), LocalDateTime.now(), Integer.parseInt(order.getTotalPrice())));
     }
+
     @Transactional(readOnly = true)
-    public NotificationResponse getNotification(){
+    public NotificationResponse getNotification() {
         var orderPieces = orderPieceRepository.findAll();
         List<NotificationSubResponse> landResponse = new ArrayList<>();
         List<NotificationSubResponse> estateResponse = new ArrayList<>();
@@ -165,9 +166,9 @@ public class InvestmentPieceService {
             sub.setType(order.getType());
             sub.setTotal_price(Integer.parseInt(order.getTotalPrice()));
             sub.setOrder_piece_id(e.getOrderPieceId());
-            if(pieceInvest.getAssetType().equals("LAND")){
+            if (pieceInvest.getAssetType().equals("LAND")) {
                 landResponse.add(sub);
-            }else{
+            } else {
                 estateResponse.add(sub);
             }
         });
@@ -176,7 +177,7 @@ public class InvestmentPieceService {
     }
 
     @Transactional(readOnly = true)
-    public List<NewsDto> getNewsList(Long pieceInvestmentId){
+    public List<NewsDto> getNewsList(Long pieceInvestmentId) {
         List<News> newsList = newsRepository.findByPieceInvestmentId(pieceInvestmentId);
         return newsList.stream()
                 .map(news -> new NewsDto(
@@ -192,12 +193,12 @@ public class InvestmentPieceService {
     }
 
     @Transactional(readOnly = true)
-    public List<DisclosureResponse> getDisclosureList(Long pieceInvestmentId){
+    public List<DisclosureResponse> getDisclosureList(Long pieceInvestmentId) {
         List<Disclosure> lists = disclosureRepository.findByPieceInvestmentId(pieceInvestmentId);
         return lists.stream()
                 .map(disclosure -> {
                     return new DisclosureResponse(disclosure.getId(), disclosure.getPieceInvestmentId(), disclosure.getAssetAddress(), disclosure.getAssetName()
-                            ,disclosure.getDisclosureTitle(), disclosure.getDisclosureContent(), disclosure.getDate().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString());
+                            , disclosure.getDisclosureTitle(), disclosure.getDisclosureContent(), disclosure.getDate().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString());
                 })
                 .toList();
     }
@@ -214,13 +215,13 @@ public class InvestmentPieceService {
     }
 
     @Transactional
-    public void deleteDisclosure(Long id){
+    public void deleteDisclosure(Long id) {
         var disclosure = disclosureRepository.findById(id).get();
         disclosureRepository.delete(disclosure);
     }
 
     @Transactional(readOnly = true)
-    public List<PieceInvestmentInfoResponse> getPieceInvestmentInfo(){
+    public List<PieceInvestmentInfoResponse> getPieceInvestmentInfo() {
         List<PieceInvestmentInfo> pieceInvestmentInfos = pieceInvestmentInfoRepository.findAll();
         return pieceInvestmentInfos.stream()
                 .map(info -> {
@@ -230,31 +231,31 @@ public class InvestmentPieceService {
     }
 
     @Transactional(readOnly = true)
-    public InvestmentPieceListResponse getApprovedPieceInvestmentInfoResponse(){
+    public InvestmentPieceListResponse getApprovedPieceInvestmentInfoResponse() {
         var pieceInvestmentsAll = pieceInvestmentRepository.findApprovedInfos();
         List<PieceInvestment> pieceInvestments = new ArrayList<>();
-        for(PieceInvestment p : pieceInvestmentsAll){
+        for (PieceInvestment p : pieceInvestmentsAll) {
             var pdf = assetFilesRepository.findByPieceInvestmentIdAndDocumentType(p.getPieceInvestmentId(), "PDF");
-            if(pdf.getAdminYn().equals("Y")){
+            if (pdf.getAdminYn().equals("Y")) {
                 pieceInvestments.add(p);
             }
         }
 
         var lands = pieceInvestments.stream()
                 .filter(piece -> "LAND".equals(piece.getAssetType()))
-                .map(this::convertToSubDtoForLand)
+                .map(this::convertToSubDto)
                 .collect(Collectors.toList());
 
         var estates = pieceInvestments.stream()
                 .filter(piece -> "ESTATE".equals(piece.getAssetType()))
-                .map(this::convertToSubDtoForEstate)
+                .map(this::convertToSubDto)
                 .collect(Collectors.toList());
 
         return new InvestmentPieceListResponse(estates, lands);
     }
 
     @Transactional(readOnly = true)
-    public List<FaqPieceInvestmentInfoResponse> getFaqPieceInvestmentInfo(){
+    public List<FaqPieceInvestmentInfoResponse> getFaqPieceInvestmentInfo() {
         List<FaqPieceInvestmentInfo> faqPieceInvestmentInfos = faqPieceInvestmentInfoRepository.findAll();
         return faqPieceInvestmentInfos.stream()
                 .map(question -> {
@@ -264,62 +265,23 @@ public class InvestmentPieceService {
     }
 
     @Transactional(readOnly = true)
-    public InvestmentPieceResponse getAssetInfo(Long id){
+    public InvestmentPieceResponse getAssetInfo(Long id) {
         var pieceInvestments = pieceInvestmentRepository.findById(id).get();
 
         // 토지 건물 구분
-        if(pieceInvestments.getAssetType().equals("LAND")){
-            return new InvestmentPieceResponse(null, convertToSubDtoForLand(pieceInvestments));
-        }else{
-            return new InvestmentPieceResponse(convertToSubDtoForEstate(pieceInvestments), null);
+        if (pieceInvestments.getAssetType().equals("LAND")) {
+            return new InvestmentPieceResponse(null, convertToSubDto(pieceInvestments));
+        } else {
+            return new InvestmentPieceResponse(convertToSubDto(pieceInvestments), null);
         }
     }
 
 
-    private InvestmentPieceListSubResponse convertToSubDtoForLand(PieceInvestment pieceInvestment) {
+    private InvestmentPieceListSubResponse convertToSubDto(PieceInvestment pieceInvestment) {
         InvestmentPieceListSubResponse subDto = new InvestmentPieceListSubResponse();
         subDto.setInvestedPieceId(pieceInvestment.getPieceInvestmentId().toString());
         //subDto.setSalesCompleted(pieceInvestment.isSaleCompleted());
         subDto.setAssetName(pieceInvestment.getAssetName());
-        subDto.setLocation(pieceInvestment.getLocate());
-        subDto.setTotal_area(pieceInvestment.getTotalArea());
-        subDto.setInvestmentPoint(pieceInvestment.getInvestmentPoint());
-        subDto.setAssetCertificateUrl(pieceInvestment.getAssetCertificateUrl());
-        subDto.setLandClassification(pieceInvestment.getLandClassification());
-        subDto.setRecommendedUse(pieceInvestment.getRecommendedUse());
-        subDto.setDesiredPrice(pieceInvestment.getDesiredPrice());
-        subDto.setPricePerUnit(pieceInvestment.getPricePerUnit());
-        subDto.setInfo(pieceInvestment.getOtherInformation());
-        subDto.setLandImageRegistration(pieceInvestment.getLandImageRegistration());
-        subDto.setEntryStatus(pieceInvestment.getEntryStatus());
-        subDto.setLeaseStartDate(pieceInvestment.getLeaseStartDate());
-        subDto.setLeaseEndDate(pieceInvestment.getLeaseEndDate());
-        subDto.setPricePerUnit(pieceInvestment.getPricePerUnit());
-        return subDto;
-    }
-
-    private InvestmentPieceListSubResponse convertToSubDtoForEstate(PieceInvestment pieceInvestment) {
-        InvestmentPieceListSubResponse subDto = new InvestmentPieceListSubResponse();
-        subDto.setInvestedPieceId(pieceInvestment.getPieceInvestmentId().toString());
-        subDto.setAssetName(pieceInvestment.getAssetName());
-        subDto.setPiece_count(pieceInvestment.getPieceCount());
-        subDto.setAssetCertificateUrl(pieceInvestment.getAssetCertificateUrl());
-        subDto.setLocation(pieceInvestment.getLocate());
-        subDto.setFloors(pieceInvestment.getFloors());
-        subDto.setUse_area(pieceInvestment.getUseArea());
-        subDto.setMain_use(pieceInvestment.getMainUse());
-        subDto.setLand_area(pieceInvestment.getLandArea());
-        subDto.setTotal_area(pieceInvestment.getTotalArea());
-        subDto.setBuilding_to_rand_ratio(pieceInvestment.getBuildingToRandRatio());
-        subDto.setFloor_area_ratio(pieceInvestment.getFloorAreaRatio());
-        subDto.setBuilding_date(pieceInvestment.getBuildingDate());
-        subDto.setAutomatic_close_flag(pieceInvestment.isAutomaticCloseFlag());
-        subDto.setAssetImage(pieceInvestment.getAssetImage());
-        subDto.setEntryStatus(pieceInvestment.getEntryStatus());
-        subDto.setInvestmentPoint(pieceInvestment.getInvestmentPoint());
-        subDto.setLeaseStartDate(pieceInvestment.getLeaseStartDate());
-        subDto.setLeaseEndDate(pieceInvestment.getLeaseEndDate());
-        subDto.setPricePerUnit(pieceInvestment.getPricePerUnit());
         return subDto;
     }
 }
