@@ -13,7 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class NotificationDetailSubResponse {
+public class
+NotificationDetailSubResponse {
 
     private Long order_piece_id;
     private String trader;

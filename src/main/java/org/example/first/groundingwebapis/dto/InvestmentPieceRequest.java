@@ -27,7 +27,7 @@ public class InvestmentPieceRequest {
     private double total_area;
     private double building_to_rand_ratio;
     private double floor_area_ratio;
-    private LocalDateTime building_date;
+    private String building_date;
     private boolean automatic_close_flag;
     private String assetType; // ESTATE, LAND
     private String entryStatus; // Y , N

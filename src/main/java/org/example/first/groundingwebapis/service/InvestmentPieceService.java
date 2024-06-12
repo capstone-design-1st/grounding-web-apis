@@ -52,17 +52,17 @@ public class InvestmentPieceService {
         if (findByLocate != null) {
             throw new AlreadyPiecedException("이미 등록된 조각투자 입니다");
         }
-        String dateString = String.valueOf(request.getBuilding_date());
-        LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
-        LocalDateTime dateTime = date.atStartOfDay();
+        LocalDate buildingDate = LocalDate.parse(request.getBuilding_date(), DateTimeFormatter.ISO_LOCAL_DATE);
+        LocalDate leaseStartDate = LocalDate.parse(request.getLeaseStartDate(), DateTimeFormatter.ISO_LOCAL_DATE);
+        LocalDate leaseEndDate = LocalDate.parse(request.getLeaseEndDate(), DateTimeFormatter.ISO_LOCAL_DATE);
 
         if (request.getType().equals("ESTATES")) {
             var res = pieceInvestmentRepository.save(
                     new PieceInvestment(
                             request.getType(), request.getLocation(), request.getPrice(), request.getInfo(), request.getFloors()
                             , request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
-                            , request.getBuilding_to_rand_ratio(), request.getFloor_area_ratio(), dateTime, request.isAutomatic_close_flag()
-                            , request.getPricePerUnit(), request.getInvestmentPoint(), request.getAssetType(), request.getEntryStatus(), request.getDesiredPrice(), request.getPiece_count(), request.getLeaseStartDate(), request.getLeaseEndDate(), request.getAssetImage(), request.getWalletAddress(), request.getAssetCertificateUrl(), request.getAssetName(), userId
+                            , request.getBuilding_to_rand_ratio(), request.getFloor_area_ratio(), buildingDate, request.isAutomatic_close_flag()
+                            , request.getPricePerUnit(), request.getInvestmentPoint(), request.getAssetType(), request.getEntryStatus(), request.getDesiredPrice(), request.getPiece_count(), leaseStartDate, leaseEndDate, request.getAssetImage(), request.getWalletAddress(), request.getAssetCertificateUrl(), request.getAssetName(), userId
                     )
             );
             return res.getPieceInvestmentId();
@@ -71,9 +71,9 @@ public class InvestmentPieceService {
                     new PieceInvestment(
                             request.getType(), request.getLocation(), request.getPrice(), request.getInfo(), request.getFloors()
                             , request.getUse_area(), request.getMain_use(), request.getLand_area(), request.getTotal_area()
-                            , request.getBuilding_to_rand_ratio(), request.getFloor_area_ratio(), dateTime, request.isAutomatic_close_flag()
+                            , request.getBuilding_to_rand_ratio(), request.getFloor_area_ratio(), buildingDate, request.isAutomatic_close_flag()
                             , request.getAssetType(), request.getEntryStatus(), request.getLandClassification()
-                            , request.getRecommendedUse(), request.getDesiredPrice(), request.getPricePerUnit(), request.getInvestmentPoint(), request.getLandImageRegistration(), request.getPiece_count(), request.getLeaseStartDate(), request.getLeaseEndDate(), request.getAssetImage(), request.getWalletAddress(), request.getAssetCertificateUrl(), request.getAssetName(), userId
+                            , request.getRecommendedUse(), request.getDesiredPrice(), request.getPricePerUnit(), request.getInvestmentPoint(), request.getLandImageRegistration(), request.getPiece_count(), leaseStartDate, leaseEndDate, request.getAssetImage(), request.getWalletAddress(), request.getAssetCertificateUrl(), request.getAssetName(), userId
                     )
             );
             return res.getPieceInvestmentId();
@@ -110,7 +110,9 @@ public class InvestmentPieceService {
     @Transactional(readOnly = true)
     public InvestmentPieceListResponse getListedList() {
         var pieceInvestmentsAll = pieceInvestmentRepository.findAll();
+
         List<PieceInvestment> pieceInvestments = new ArrayList<>();
+
         for (PieceInvestment p : pieceInvestmentsAll) {
             var pdf = assetFilesRepository.findByPieceInvestmentIdAndDocumentType(p.getPieceInvestmentId(), "PDF");
             if (pdf.getAdminYn().equals("Y")) {

@@ -18,4 +18,7 @@ public interface PieceInvestmentRepository extends JpaRepository<PieceInvestment
     List<PieceInvestment> findApprovedInfos();
 
     List<PieceInvestment> findByUserId(Long userId);
+
+    @Query("SELECT e FROM PieceInvestment e JOIN AssetFiles f ON e.pieceInvestmentId = f.pieceInvestmentId WHERE f.adminYn = 'Y'")
+    List<PieceInvestment> findApprovedPieceInvestmentList();
 }

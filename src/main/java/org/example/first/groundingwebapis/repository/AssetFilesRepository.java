@@ -11,5 +11,6 @@ public interface AssetFilesRepository extends JpaRepository<AssetFiles, Long> {
 
     List<AssetFiles> findByPieceInvestmentId(@Param("pieceInvestmentId") Long id);
 
+    @Query("SELECT af FROM AssetFiles af WHERE af.pieceInvestmentId = :id AND af.documentType = :documentType")
     AssetFiles findByPieceInvestmentIdAndDocumentType(@Param("pieceInvestmentId") Long id, @Param("documentType") String documentType);
 }
