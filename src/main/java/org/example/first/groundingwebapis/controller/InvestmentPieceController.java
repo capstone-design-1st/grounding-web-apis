@@ -40,7 +40,7 @@ public class InvestmentPieceController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
+//
     @PreAuthorize("isAuthenticated()")
     @PostMapping(value ="/asset-file",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> setFiles(
