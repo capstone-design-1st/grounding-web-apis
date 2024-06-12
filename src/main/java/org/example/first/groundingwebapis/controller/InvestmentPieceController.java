@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,14 +24,23 @@ public class InvestmentPieceController {
 
     private final InvestmentPieceService investmentPieceService;
 
-
+    @PreAuthorize("isAuthenticated()")
     @PostMapping
-    public ResponseEntity<Void> setInvestmentPiece(@RequestBody InvestmentPieceRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal, Long userId) {
-        userId = userPrincipal.getUser().getUserId();
-        investmentPieceService.setInvestmentPiece(request, userId);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<UserDto.SetPropertyResponseDto> setInvestmentPiece(@RequestBody InvestmentPieceRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        Long userId = userPrincipal.getUser().getUserId();
+        //Long pieceInvestmentId = investmentPieceService.setInvestmentPiece(request, userId);
+        //return ResponseEntity.status(HttpStatus.CREATED).body(pieceInvestmentId);
+        //return ResponseEntity.ok(investmentPieceService.setInvestmentPiece(request, userId));
+        Long propertyId = investmentPieceService.setInvestmentPiece(request, userId);
+
+        UserDto.SetPropertyResponseDto response = UserDto.SetPropertyResponseDto.builder()
+                .propertyId(propertyId)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping(value ="/asset-file",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> setFiles(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
@@ -68,6 +78,15 @@ public class InvestmentPieceController {
     @GetMapping("/news/{piece-investment-id}")
     public ResponseEntity<List<NewsDto>> getNewsList(@PathVariable(name = "piece-investment-id") Long id){
         return ResponseEntity.ok(investmentPieceService.getNewsList(id));
+    }
+
+    @PostMapping("/news")
+    public ResponseEntity<Void> setNews(@RequestPart("piece_investment_id") Long pieceInvestmentId,
+                                              @RequestPart("title") String title,
+                                              @RequestPart("publisher") String publisher,
+                                              @RequestPart("reportedAt") String reportedAt) throws IOException {
+        investmentPieceService.setNews(pieceInvestmentId, title, publisher, reportedAt);
+        return ResponseEntity.ok().build();
     }
 
     // 공시조회

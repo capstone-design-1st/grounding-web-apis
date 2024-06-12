@@ -37,6 +37,7 @@ public class AdminService {
     public List<AdminAssetFileListsResponse> getAssetFileLists(){
         var assetFiles = assetFilesRepository.findAll();
         return assetFiles.stream()
+                .filter(assetFile -> assetFile.getDocumentType().equals("PDF"))
                 .map(assetFile -> {
                     return new AdminAssetFileListsResponse(assetFile.getId(), assetFile.getUserId(), assetFile.getDocumentType(), assetFile.getFileName(), assetFile.getAdminYn());
                 })
@@ -44,9 +45,13 @@ public class AdminService {
     }
 
     @Transactional
-    public void setAssetYn(AdminAssetYnRequest request){
+    public void setAssetYn(AdminAssetYnRequest request) throws Exception {
         var file = assetFilesRepository.findById(request.getAssetFileId()).get();
-        file.updateYn(request.getAdminYn());
+        if(file.getDocumentType().equals("PDF")){
+            file.updateYn(request.getAdminYn());
+        }else{
+            throw new Exception("PDF 파일만 승인이 가능합니다.");
+        }
     }
 
     @Transactional

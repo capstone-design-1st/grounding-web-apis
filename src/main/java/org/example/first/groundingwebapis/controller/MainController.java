@@ -28,7 +28,7 @@ public class MainController {
     @GetMapping("/my")
     public ResponseEntity<MainMyResponse> getMySaleStatusList(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         Long userId = userPrincipal.getUser().getUserId();
-    return ResponseEntity.ok(mainService.getMySaleStatusList(userId));
+        return ResponseEntity.ok(mainService.getMySaleStatusList(userId));
     }
 
 
@@ -45,6 +45,6 @@ public class MainController {
     @GetMapping("/status")
     public ResponseEntity<MainStatusResponse> getMainStatus(@AuthenticationPrincipal UserPrincipal userPrincipal){
         Long userId = userPrincipal.getUser().getUserId();
-    return ResponseEntity.ok(mainService.getMainStatus(userId));
+        return ResponseEntity.ok(mainService.getMainStatus(userId));
     }
 }

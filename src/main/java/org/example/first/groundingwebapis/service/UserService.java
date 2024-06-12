@@ -25,5 +25,4 @@ public interface UserService {
     UserDto.GetPhoneNumberResponseDto getPhoneNumber(Long userId);
 
     UserDto.GetWalletAddressResponseDto getWallet(Long userId);
-
 }

@@ -31,7 +31,7 @@ public class JwtTokenProvider {
                 .setIssuedAt(now)
                 .setExpiration(tokenExpiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .setIssuer("1st")
+                .setIssuer("1st-web")
                 .compact();
         log.info("jwtAccessToken 생성 완료 : " + token);
 

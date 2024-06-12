@@ -43,7 +43,15 @@ public class MainService {
 
     @Transactional(readOnly = true)
     public MainMyResponse getMySaleStatusList(Long userId){
-        var pieceInvestments = pieceInvestmentRepository.findByUserId(userId);
+        var pieceInvestmentsAll = pieceInvestmentRepository.findByUserId(userId);
+        List<PieceInvestment> pieceInvestments = new ArrayList<>();
+        for(PieceInvestment p : pieceInvestmentsAll){
+            var pdf = assetFilesRepository.findByPieceInvestmentIdAndDocumentType(p.getPieceInvestmentId(), "PDF");
+            if(pdf.getAdminYn().equals("Y")){
+                pieceInvestments.add(p);
+            }
+        }
+
         List<AssetFiles> thumbnailImage = new ArrayList<>();
         var topRecentInvestments = pieceInvestments.stream()
                 .sorted(Comparator.comparing(PieceInvestment::getDate).reversed())
@@ -127,7 +135,7 @@ public class MainService {
         MainSubResponse subDto = new MainSubResponse();
         subDto.setInvestment_piece_id(pieceInvestment.getPieceInvestmentId().toString());
         subDto.setRegister_date(pieceInvestment.getDate().format(DateTimeFormatter.ofPattern("yyyyMMdd")).toString());
-        subDto.setName(pieceInvestment.getName());
+        subDto.setAssetName(pieceInvestment.getAssetName());
         return subDto;
     }
 }

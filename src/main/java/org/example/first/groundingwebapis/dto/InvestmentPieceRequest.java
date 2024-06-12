@@ -42,4 +42,5 @@ public class InvestmentPieceRequest {
     private String assetImage;
     private String assetCertificateUrl;
     private String walletAddress;
+    private String assetName;
 }

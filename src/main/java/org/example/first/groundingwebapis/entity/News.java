@@ -41,7 +41,7 @@ public class News {
 
 
     @Builder
-    public News(String title,
+    public News(Long pieceInvestmentId, String title,
                 String reportedAt,
                 String publisher) {
         this.title = title;
