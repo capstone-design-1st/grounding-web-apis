@@ -186,4 +186,5 @@ public class UserDto {
     public static class SetPropertyResponseDto{
         private Long propertyId;
     }
+
 }

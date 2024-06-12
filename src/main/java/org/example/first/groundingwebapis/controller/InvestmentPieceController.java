@@ -15,7 +15,6 @@ import org.example.first.groundingwebapis.security.UserPrincipal;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -25,13 +24,13 @@ public class InvestmentPieceController {
 
     private final InvestmentPieceService investmentPieceService;
 
-
     @PreAuthorize("isAuthenticated()")
     @PostMapping
     public ResponseEntity<UserDto.SetPropertyResponseDto> setInvestmentPiece(@RequestBody InvestmentPieceRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         Long userId = userPrincipal.getUser().getUserId();
         //Long pieceInvestmentId = investmentPieceService.setInvestmentPiece(request, userId);
         //return ResponseEntity.status(HttpStatus.CREATED).body(pieceInvestmentId);
+        //return ResponseEntity.ok(investmentPieceService.setInvestmentPiece(request, userId));
         Long propertyId = investmentPieceService.setInvestmentPiece(request, userId);
 
         UserDto.SetPropertyResponseDto response = UserDto.SetPropertyResponseDto.builder()
@@ -40,22 +39,21 @@ public class InvestmentPieceController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-//
+
     @PreAuthorize("isAuthenticated()")
     @PostMapping(value ="/asset-file",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> setFiles(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestPart("piece_investment_id") Long pieceInvestmentId,
             @RequestPart("file_name") MultipartFile file,
-            @RequestPart("image_files") MultipartFile[] files) throws IOException {
+            @RequestPart("image_files") MultipartFile[] files, Long userId) throws IOException {
 
-        Long userId = userPrincipal.getUser().getUserId();
+        userId = userPrincipal.getUser().getUserId();
         return ResponseEntity.ok(investmentPieceService.setFiles(pieceInvestmentId, file, files, userId));
     }
 
     @GetMapping("/list")
     public ResponseEntity<InvestmentPieceListResponse> getListedList(){
-
         return ResponseEntity.ok(investmentPieceService.getListedList());
     }
 

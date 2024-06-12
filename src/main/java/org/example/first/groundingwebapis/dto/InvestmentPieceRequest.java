@@ -26,7 +26,7 @@ public class InvestmentPieceRequest {
     private double land_area;
     private double total_area;
     private double building_to_rand_ratio;
-    private double floor_area_ratio;
+    private Integer floor_area_ratio;
     private String building_date;
     private boolean automatic_close_flag;
     private String assetType; // ESTATE, LAND
@@ -43,5 +43,4 @@ public class InvestmentPieceRequest {
     private String assetCertificateUrl;
     private String walletAddress;
     private String assetName;
-    //private Long pieceInvestmentId;
 }

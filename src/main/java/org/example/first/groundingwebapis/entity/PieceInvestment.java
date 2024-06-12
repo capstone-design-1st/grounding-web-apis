@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import lombok.Getter;
@@ -68,7 +67,7 @@ public class PieceInvestment {
     private double floorAreaRatio;
 
     @Column(name = "building_date", nullable = false)
-    private LocalDate buildingDate;
+    private String buildingDate;
 
     @Column(name = "automatic_close_flag", nullable = false)
     private boolean automaticCloseFlag;
@@ -87,6 +86,9 @@ public class PieceInvestment {
 
     @Column(name = "entry_status")
     private String entryStatus;
+
+    //@Column(name = "location_address")
+    //private String locationAddress;
 
     @Column(name = "land_classification")
     private String landClassification;
@@ -107,10 +109,10 @@ public class PieceInvestment {
     private String landImageRegistration;
 
     @Column(name = "lease_start_date")
-    private LocalDate leaseStartDate;
+    private String leaseStartDate;
 
     @Column(name = "lease_end_date")
-    private LocalDate leaseEndDate;
+    private String leaseEndDate;
 
     @Column(name = "wallet_address")
     private String walletAddress;
@@ -120,8 +122,8 @@ public class PieceInvestment {
 
     public PieceInvestment(String type, String locate, Integer price, String otherInformation, Integer floors,
                            String useArea, String mainUse, double landArea, double totalArea, double buildingToRandRatio,
-                           double floor_area_ratio, LocalDate buildingDate, boolean automaticCloseFlag, Integer pricePerUnit, String investmentPoint, String assetType,
-                           String entryStatus, String desiredPrice, Integer pieceCount, LocalDate leaseStartDate, LocalDate leaseEndDate, String assetImage, String walletAddress, String assetCertificateUrl, String assetName, Long userId) {
+                           double floor_area_ratio, String buildingDate, boolean automaticCloseFlag, Integer pricePerUnit, String investmentPoint, String assetType,
+                           String entryStatus, String desiredPrice, Integer pieceCount, String leaseStartDate, String leaseEndDate, String assetImage, String walletAddress, String assetCertificateUrl, String assetName, Long userId) {
         this.type = type;
         this.locate = locate;
         this.price = price;
@@ -135,7 +137,7 @@ public class PieceInvestment {
         this.floorAreaRatio = floor_area_ratio;
         this.buildingDate = buildingDate;
         this.automaticCloseFlag = automaticCloseFlag;
-        this.date = LocalDateTime.now();
+        //this.date = LocalDateTime.now();
         this.pricePerUnit = pricePerUnit;
         this.investmentPoint = investmentPoint;
         this.assetType = assetType;
@@ -153,9 +155,9 @@ public class PieceInvestment {
 
     public PieceInvestment(String type, String locate, Integer price, String otherInformation, Integer floors,
                            String useArea, String mainUse, double landArea, double totalArea, double buildingToRandRatio,
-                           double floor_area_ratio, LocalDate buildingDate, boolean automaticCloseFlag, String assetType, String entryStatus,
+                           double floor_area_ratio, String buildingDate, boolean automaticCloseFlag, String assetType, String entryStatus,
                            String landClassification, String recommendedUse, String desiredPrice, Integer pricePerUnit, String investmentPoint,
-                           String landImageRegistration, Integer pieceCount, LocalDate leaseStartDate, LocalDate leaseEndDate, String assetImage, String walletAddress, String assetCertificateUrl, String assetName, Long userId) {
+                           String landImageRegistration, Integer pieceCount, String leaseStartDate, String leaseEndDate, String assetImage, String walletAddress, String assetCertificateUrl, String assetName, Long userId) {
         this.type = type;
         this.locate = locate;
         this.price = price;
