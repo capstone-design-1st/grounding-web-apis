@@ -120,12 +120,12 @@ public class InvestmentPieceService {
 
         var lands = pieceInvestments.stream()
                 .filter(piece -> "LAND".equals(piece.getAssetType()))
-                .map(this::convertToSubDto)
+                .map(this::convertToSubDtoForLand)
                 .collect(Collectors.toList());
 
         var estates = pieceInvestments.stream()
                 .filter(piece -> "ESTATE".equals(piece.getAssetType()))
-                .map(this::convertToSubDto)
+                .map(this::convertToSubDtoForEstate)
                 .collect(Collectors.toList());
 
         return new InvestmentPieceListResponse(estates, lands);
@@ -242,12 +242,12 @@ public class InvestmentPieceService {
 
         var lands = pieceInvestments.stream()
                 .filter(piece -> "LAND".equals(piece.getAssetType()))
-                .map(this::convertToSubDto)
+                .map(this::convertToSubDtoForLand)
                 .collect(Collectors.toList());
 
         var estates = pieceInvestments.stream()
                 .filter(piece -> "ESTATE".equals(piece.getAssetType()))
-                .map(this::convertToSubDto)
+                .map(this::convertToSubDtoForEstate)
                 .collect(Collectors.toList());
 
         return new InvestmentPieceListResponse(estates, lands);
@@ -269,19 +269,57 @@ public class InvestmentPieceService {
 
         // 토지 건물 구분
         if(pieceInvestments.getAssetType().equals("LAND")){
-            return new InvestmentPieceResponse(null, convertToSubDto(pieceInvestments));
+            return new InvestmentPieceResponse(null, convertToSubDtoForLand(pieceInvestments));
         }else{
-            return new InvestmentPieceResponse(convertToSubDto(pieceInvestments), null);
+            return new InvestmentPieceResponse(convertToSubDtoForEstate(pieceInvestments), null);
         }
     }
 
 
-    private InvestmentPieceListSubResponse convertToSubDto(PieceInvestment pieceInvestment) {
+    private InvestmentPieceListSubResponse convertToSubDtoForLand(PieceInvestment pieceInvestment) {
         InvestmentPieceListSubResponse subDto = new InvestmentPieceListSubResponse();
         subDto.setInvestedPieceId(pieceInvestment.getPieceInvestmentId().toString());
         //subDto.setSalesCompleted(pieceInvestment.isSaleCompleted());
         subDto.setAssetName(pieceInvestment.getAssetName());
+        subDto.setLocation(pieceInvestment.getLocate());
+        subDto.setTotal_area(pieceInvestment.getTotalArea());
+        subDto.setInvestmentPoint(pieceInvestment.getInvestmentPoint());
+        subDto.setAssetCertificateUrl(pieceInvestment.getAssetCertificateUrl());
+        subDto.setLandClassification(pieceInvestment.getLandClassification());
+        subDto.setRecommendedUse(pieceInvestment.getRecommendedUse());
+        subDto.setDesiredPrice(pieceInvestment.getDesiredPrice());
+        subDto.setPricePerUnit(pieceInvestment.getPricePerUnit());
+        subDto.setInfo(pieceInvestment.getOtherInformation());
+        subDto.setLandImageRegistration(pieceInvestment.getLandImageRegistration());
+        subDto.setEntryStatus(pieceInvestment.getEntryStatus());
+        subDto.setLeaseStartDate(pieceInvestment.getLeaseStartDate());
+        subDto.setLeaseEndDate(pieceInvestment.getLeaseEndDate());
+        subDto.setPricePerUnit(pieceInvestment.getPricePerUnit());
         return subDto;
     }
 
+    private InvestmentPieceListSubResponse convertToSubDtoForEstate(PieceInvestment pieceInvestment) {
+        InvestmentPieceListSubResponse subDto = new InvestmentPieceListSubResponse();
+        subDto.setInvestedPieceId(pieceInvestment.getPieceInvestmentId().toString());
+        subDto.setAssetName(pieceInvestment.getAssetName());
+        subDto.setPiece_count(pieceInvestment.getPieceCount());
+        subDto.setAssetCertificateUrl(pieceInvestment.getAssetCertificateUrl());
+        subDto.setLocation(pieceInvestment.getLocate());
+        subDto.setFloors(pieceInvestment.getFloors());
+        subDto.setUse_area(pieceInvestment.getUseArea());
+        subDto.setMain_use(pieceInvestment.getMainUse());
+        subDto.setLand_area(pieceInvestment.getLandArea());
+        subDto.setTotal_area(pieceInvestment.getTotalArea());
+        subDto.setBuilding_to_rand_ratio(pieceInvestment.getBuildingToRandRatio());
+        subDto.setFloor_area_ratio(pieceInvestment.getFloorAreaRatio());
+        subDto.setBuilding_date(String.valueOf(pieceInvestment.getBuildingDate()));
+        subDto.setAutomatic_close_flag(pieceInvestment.isAutomaticCloseFlag());
+        subDto.setAssetImage(pieceInvestment.getAssetImage());
+        subDto.setEntryStatus(pieceInvestment.getEntryStatus());
+        subDto.setInvestmentPoint(pieceInvestment.getInvestmentPoint());
+        subDto.setLeaseStartDate(pieceInvestment.getLeaseStartDate());
+        subDto.setLeaseEndDate(pieceInvestment.getLeaseEndDate());
+        subDto.setPricePerUnit(pieceInvestment.getPricePerUnit());
+        return subDto;
+    }
 }
