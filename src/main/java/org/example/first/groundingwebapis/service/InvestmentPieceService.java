@@ -151,30 +151,30 @@ public class InvestmentPieceService {
         return new NotificationDetailResponse(new NotificationDetailSubResponse(Long.parseLong(orderPieceId), user.getName(), order.getType(),
                 user.getName() + "님이 " + order.getCount()+ "개 구매했습니다.", order.getCount(), LocalDateTime.now(), Integer.parseInt(order.getTotalPrice())));
     }
-    @Transactional(readOnly = true)
-    public NotificationResponse getNotification(){
-        var orderPieces = orderPieceRepository.findAll();
-        List<NotificationSubResponse> landResponse = new ArrayList<>();
-        List<NotificationSubResponse> estateResponse = new ArrayList<>();
-        orderPieces.forEach(e -> {
-            NotificationSubResponse sub = new NotificationSubResponse();
-            var notification = notificationRepository.findByOrderPieceId(e.getOrderPieceId());
-            var order = orderRepository.findById(e.getOrderId()).get();
-            var pieceInvest = pieceInvestmentRepository.findById(Long.parseLong(e.getPieceInvestmentId().toString())).get();
-            sub.setCount(order.getCount());
-            sub.setMessage(notification.getMessage());
-            sub.setType(order.getType());
-            sub.setTotal_price(Integer.parseInt(order.getTotalPrice()));
-            sub.setOrder_piece_id(e.getOrderPieceId());
-            if(pieceInvest.getAssetType().equals("LAND")){
-                landResponse.add(sub);
-            }else{
-                estateResponse.add(sub);
-            }
-        });
-
-        return new NotificationResponse(estateResponse, landResponse);
-    }
+//    @Transactional(readOnly = true)
+//    public NotificationResponse getNotification(){
+//        var orderPieces = orderPieceRepository.findAll();
+//        List<NotificationSubResponse> landResponse = new ArrayList<>();
+//        List<NotificationSubResponse> estateResponse = new ArrayList<>();
+//        orderPieces.forEach(e -> {
+//            NotificationSubResponse sub = new NotificationSubResponse();
+//            var notification = notificationRepository.findByOrderPieceId(e.getOrderPieceId());
+//            var order = orderRepository.findById(e.getOrderId()).get();
+//            var pieceInvest = pieceInvestmentRepository.findById(Long.parseLong(e.getPieceInvestmentId().toString())).get();
+//            sub.setCount(order.getCount());
+//            sub.setMessage(notification.getMessage());
+//            sub.setType(order.getType());
+//            sub.setTotal_price(Integer.parseInt(order.getTotalPrice()));
+//            sub.setOrder_piece_id(e.getOrderPieceId());
+//            if(pieceInvest.getAssetType().equals("LAND")){
+//                landResponse.add(sub);
+//            }else{
+//                estateResponse.add(sub);
+//            }
+//        });
+//
+//        return new NotificationResponse(estateResponse, landResponse);
+//    }
 
     @Transactional(readOnly = true)
     public List<NewsDto> getNewsList(Long pieceInvestmentId){
