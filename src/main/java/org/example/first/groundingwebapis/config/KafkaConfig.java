@@ -1,5 +1,6 @@
 package org.example.first.groundingwebapis.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
+@Slf4j
 public class KafkaConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String BOOTSTRAP_SERVERS;
@@ -23,6 +25,7 @@ public class KafkaConfig {
     // producer configuration
     @Bean
     public ProducerFactory<String, String> producerFactory() {
+        log.info("BOOTSTRAP_SERVERS: {}", BOOTSTRAP_SERVERS);
         Map<String, Object> configProps = new HashMap<>();
 
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
