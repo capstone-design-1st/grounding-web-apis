@@ -32,7 +32,7 @@ import java.util.Collections;
 public class SecurityConfig{
     private final JwtTokenFilter jwtTokenFilter;
     private final UserDetailServiceImpl userDetailsService;
-
+// 
     @Value("${CLIENT_URL}")
     private String clientUrl;
 
