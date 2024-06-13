@@ -1,5 +1,6 @@
 package org.example.first.groundingwebapis.service;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.example.first.groundingwebapis.dto.*;
 import org.example.first.groundingwebapis.entity.*;
 import org.example.first.groundingwebapis.exception.AlreadyPiecedException;
@@ -115,10 +116,11 @@ public class InvestmentPieceService {
         var pieceInvestmentsAll = pieceInvestmentRepository.findAll();
         List<PieceInvestment> pieceInvestments = new ArrayList<>();
         for(PieceInvestment p : pieceInvestmentsAll){
-            var pdf = assetFilesRepository.findByPieceInvestmentIdAndDocumentType(p.getPieceInvestmentId(), "PDF");
-            if(pdf.getAdminYn().equals("Y")){
-                pieceInvestments.add(p);
-            }
+            List<AssetFiles> pdfs = assetFilesRepository.findByPieceInvestmentIdAndDocumentType(p.getPieceInvestmentId(), "PDF");
+            for(AssetFiles pdf : pdfs)
+                if(pdf.getAdminYn().equals("Y")){
+                    pieceInvestments.add(p);
+                }
         }
 
         var lands = pieceInvestments.stream()
@@ -242,10 +244,11 @@ public class InvestmentPieceService {
         var pieceInvestmentsAll = pieceInvestmentRepository.findApprovedInfos();
         List<PieceInvestment> pieceInvestments = new ArrayList<>();
         for(PieceInvestment p : pieceInvestmentsAll){
-            var pdf = assetFilesRepository.findByPieceInvestmentIdAndDocumentType(p.getPieceInvestmentId(), "PDF");
-            if(pdf.getAdminYn().equals("Y")){
-                pieceInvestments.add(p);
-            }
+            List<AssetFiles> pdfs = assetFilesRepository.findByPieceInvestmentIdAndDocumentType(p.getPieceInvestmentId(), "PDF");
+            for(AssetFiles pdf : pdfs)
+                if(pdf.getAdminYn().equals("Y")){
+                    pieceInvestments.add(p);
+                }
         }
 
         var lands = pieceInvestments.stream()

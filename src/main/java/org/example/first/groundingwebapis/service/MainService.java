@@ -46,10 +46,11 @@ public class MainService {
         var pieceInvestmentsAll = pieceInvestmentRepository.findByUserId(userId);
         List<PieceInvestment> pieceInvestments = new ArrayList<>();
         for(PieceInvestment p : pieceInvestmentsAll){
-            var pdf = assetFilesRepository.findByPieceInvestmentIdAndDocumentType(p.getPieceInvestmentId(), "PDF");
-            if(pdf.getAdminYn().equals("Y")){
-                pieceInvestments.add(p);
-            }
+            List<AssetFiles> pdfs = assetFilesRepository.findByPieceInvestmentIdAndDocumentType(p.getPieceInvestmentId(), "PDF");
+            for(AssetFiles pdf : pdfs)
+                if(pdf.getAdminYn().equals("Y")){
+                    pieceInvestments.add(p);
+                }
         }
 
         List<AssetFiles> thumbnailImage = new ArrayList<>();
