@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface AdminUserRepository extends JpaRepository<AdminUser, Long> {
-
+// 
     AdminUser findByUserName(@Param("userName") String userName);
 }

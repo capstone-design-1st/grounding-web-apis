@@ -12,6 +12,7 @@ import org.example.first.groundingwebapis.repository.PieceInvestmentInfoReposito
 import org.example.first.groundingwebapis.repository.PieceInvestmentRepository;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +26,7 @@ public class KafkaNotificationConsumeService {
 
     @KafkaListener(topics = "create-notification")
     @Transactional
-    public void createNotification(String payload, Acknowledgment acknowledgment) {
+    public void createNotification(@Payload String payload, Acknowledgment acknowledgment) {
         log.info("received payload='{}'", payload);
 
         KafkaDto.NotificationConsumeDto notificationConsumeDto = null;
