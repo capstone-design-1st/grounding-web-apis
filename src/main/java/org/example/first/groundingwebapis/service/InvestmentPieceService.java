@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -142,15 +144,15 @@ public class InvestmentPieceService {
         pieceInvestmentRepository.delete(pieceInvestment.get());
     }
 
-    @Transactional(readOnly = true)
-    public NotificationDetailResponse getNotificationDetail(String orderPieceId){
-        var orderPiece = orderPieceRepository.findById(Long.parseLong(orderPieceId)).get();
-        var order = orderRepository.findByTypeAndId("구매", orderPiece.getOrderId());
-        var user = userRepository.findById(Long.parseLong(order.getUserId())).get();
-        var notification = notificationRepository.findByOrderPieceId(Long.parseLong(orderPieceId));
-        return new NotificationDetailResponse(new NotificationDetailSubResponse(Long.parseLong(orderPieceId), user.getName(), order.getType(),
-                user.getName() + "님이 " + order.getCount()+ "개 구매했습니다.", order.getCount(), LocalDateTime.now(), Integer.parseInt(order.getTotalPrice())));
-    }
+//    @Transactional(readOnly = true)
+//    public NotificationDetailResponse getNotificationDetail(String orderPieceId){
+//        var orderPiece = orderPieceRepository.findById(Long.parseLong(orderPieceId)).get();
+//        var order = orderRepository.findByTypeAndId("구매", orderPiece.getOrderId());
+//        var user = userRepository.findById(Long.parseLong(order.getUserId())).get();
+//        var notification = notificationRepository.findByOrderPieceId(Long.parseLong(orderPieceId));
+//        return new NotificationDetailResponse(new NotificationDetailSubResponse(Long.parseLong(orderPieceId), user.getName(), order.getType(),
+//                user.getName() + "님이 " + order.getCount()+ "개 구매했습니다.", order.getCount(), LocalDateTime.now(), Integer.parseInt(order.getTotalPrice())));
+//    }
 //    @Transactional(readOnly = true)
 //    public NotificationResponse getNotification(){
 //        var orderPieces = orderPieceRepository.findAll();
@@ -162,7 +164,8 @@ public class InvestmentPieceService {
 //            var order = orderRepository.findById(e.getOrderId()).get();
 //            var pieceInvest = pieceInvestmentRepository.findById(Long.parseLong(e.getPieceInvestmentId().toString())).get();
 //            sub.setCount(order.getCount());
-//            sub.setMessage(notification.getMessage());
+//            //sub.setMessage(notification.getMessage());
+//
 //            sub.setType(order.getType());
 //            sub.setTotal_price(Integer.parseInt(order.getTotalPrice()));
 //            sub.setOrder_piece_id(e.getOrderPieceId());
@@ -175,6 +178,10 @@ public class InvestmentPieceService {
 //
 //        return new NotificationResponse(estateResponse, landResponse);
 //    }
+
+
+
+
 
     @Transactional(readOnly = true)
     public List<NewsDto> getNewsList(Long pieceInvestmentId){
@@ -285,4 +292,10 @@ public class InvestmentPieceService {
         return subDto;
     }
 
+    public Page<NotificationDto.GetResponse> getNotifications(Long pieceInvestmentId, Pageable pageable) {
+
+        Page<NotificationDto.GetResponse> notifications = notificationRepository.readByPieceInvestmentId(pieceInvestmentId, pageable);
+
+
+    }
 }

@@ -26,14 +26,4 @@ public class OrderPiece {
     @Column(name = "count", nullable = false)
     private Integer count;
 
-    @OneToMany(mappedBy = "orderPiece", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Notification> notification = new LinkedHashSet<>();
-
-    public Collection<Notification> getNotification() {
-        return notification;
-    }
-
-    public void addNotification(Notification notification) {
-        this.notification.add(notification);
-    }
 }

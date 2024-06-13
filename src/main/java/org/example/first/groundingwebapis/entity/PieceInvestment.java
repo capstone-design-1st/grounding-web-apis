@@ -1,13 +1,10 @@
 package org.example.first.groundingwebapis.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import lombok.Getter;
 
@@ -23,9 +20,6 @@ public class PieceInvestment {
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
-
-    @Column(name = "name")
-    private String name;
 
     @Column(name = "asset_name")
     private String assetName;
@@ -121,6 +115,9 @@ public class PieceInvestment {
     private String assetCertificateUrl;
 
 
+    @OneToMany(mappedBy = "orderPiece", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Notification> notification = new LinkedHashSet<>();
+
     public PieceInvestment(String type, String locate, Integer price, String otherInformation, Integer floors,
                            String useArea, String mainUse, double landArea, double totalArea, double buildingToRandRatio,
                            double floor_area_ratio, String buildingDate, boolean automaticCloseFlag, Integer pricePerUnit, String oneline, String assetType,
@@ -191,6 +188,9 @@ public class PieceInvestment {
         this.userId = userId;
     }
 
+    void addNotification(Notification notification) {
+        this.notification.add(notification);
+    }
 
     public PieceInvestment() {
 

@@ -4,6 +4,9 @@ import org.example.first.groundingwebapis.dto.*;
 import org.example.first.groundingwebapis.service.InvestmentPieceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -64,14 +67,23 @@ public class InvestmentPieceController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/notification/{order-piece-id}")
-    public ResponseEntity<NotificationDetailResponse> getNotificationDetail(@PathVariable(name = "order-piece-id") String orderPieceId){
-        return ResponseEntity.ok(investmentPieceService.getNotificationDetail(orderPieceId));
-    }
+//    @GetMapping("/notification/{order-piece-id}")
+//    public ResponseEntity<NotificationDetailResponse> getNotificationDetail(@PathVariable(name = "order-piece-id") String orderPieceId){
+//        return ResponseEntity.ok(investmentPieceService.getNotificationDetail(orderPieceId));
+//    }
+//
+//    @GetMapping("/notification")
+//    public ResponseEntity<Page<NotificationResponse>> getNotification(){
+//        return ResponseEntity.ok(investmentPieceService.getNotification());
+//    }
 
-    @GetMapping("/notification")
-    public ResponseEntity<NotificationResponse> getNotification(){
-        return ResponseEntity.ok(investmentPieceService.getNotification());
+    @GetMapping("/notification/{piece-investment-id}")
+    public ResponseEntity<Page<NotificationDto.GetResponse>> getNotificationDetail(@PathVariable(name = "piece-investment-id") Long pieceInvestmentId,
+                                                                                   @RequestParam(name = "page", defaultValue = "0") int page,
+                                                                                  @RequestParam(name = "size", defaultValue = "10") int size){
+        Pageable pageable = PageRequest.of(page, size);
+
+        return ResponseEntity.ok(investmentPieceService.getNotifications(pieceInvestmentId, pageable));
     }
 
     // 뉴스 조회

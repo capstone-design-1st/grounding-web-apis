@@ -22,8 +22,8 @@ public class Notification {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_piece_id", nullable = false, foreignKey = @ForeignKey(name = "fk_notifications_order_piece"))
-    private OrderPiece orderPiece;
+    @JoinColumn(name = "piece_investment_id", nullable = false, foreignKey = @ForeignKey(name = "fk_notifications_piece_investment"))
+    private PieceInvestment pieceInvestment;
 
     @Column(name = "user_name")
     private String userName;
@@ -44,14 +44,13 @@ public class Notification {
             this.notificationTime = LocalDateTime.now();
     }
 
-    void updateOrderPiece(OrderPiece orderPiece) {
-        this.orderPiece = orderPiece;
-        orderPiece.addNotification(this);
+    public void updatePieceInvestment(PieceInvestment pieceInvestment) {
+        this.pieceInvestment = pieceInvestment;
+        pieceInvestment.addNotification(this);
     }
 
     @Builder
     public Notification(OrderPiece orderPiece, String userName, Integer quantity, Double progressRate, LocalDateTime notificationTime) {
-        this.orderPiece = orderPiece;
         this.userName = userName;
         this.quantity = quantity;
         this.progressRate = progressRate;

@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PieceInvestmentInfoRepository extends JpaRepository<PieceInvestmentInfo, Long> {
 
+    PieceInvestmentInfo findByAssetName(String pieceInvestmentName);
 }
