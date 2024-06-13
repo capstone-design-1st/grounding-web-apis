@@ -52,7 +52,7 @@ public class InvestmentPieceService {
         if(findByLocate != null){
             throw new AlreadyPiecedException("이미 등록된 조각투자 입니다");
         }
-        /*String dateString = request.getBuilding_date(); 
+        /*String dateString = request.getBuilding_date();
         LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
         LocalDateTime dateTime = date.atStartOfDay();
         */

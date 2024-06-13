@@ -1,30 +1,60 @@
 package org.example.first.groundingwebapis.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import java.time.LocalDateTime;
-import lombok.Getter;
+import jakarta.persistence.*;
 
-@Getter
+import java.time.LocalDateTime;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 @Entity
-@Table(name = "notification")
+@Table(name = "notifications")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Notification {
 
     @Id
+    @Column(name = "notification_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "order_piece_id")
-    private Long orderPieceId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_piece_id", nullable = false, foreignKey = @ForeignKey(name = "fk_notifications_order_piece"))
+    private OrderPiece orderPiece;
 
-    @Column(name = "message")
-    private String message;
+    @Column(name = "user_name")
+    private String userName;
+
+    @Column(name = "quantity")
+    private Integer quantity;
+
+    @Column(name = "progress_rate")
+    private Double progressRate;
 
     @Column(name = "notification_time")
     private LocalDateTime notificationTime;
+//@PrePersist
 
+    @PrePersist
+    public void prePersist() {
+        if (this.notificationTime == null)
+            this.notificationTime = LocalDateTime.now();
+    }
+
+    void updateOrderPiece(OrderPiece orderPiece) {
+        this.orderPiece = orderPiece;
+        orderPiece.addNotification(this);
+    }
+
+    @Builder
+    public Notification(OrderPiece orderPiece, String userName, Integer quantity, Double progressRate, LocalDateTime notificationTime) {
+        this.orderPiece = orderPiece;
+        this.userName = userName;
+        this.quantity = quantity;
+        this.progressRate = progressRate;
+        this.notificationTime = notificationTime;
+    }
 }

@@ -1,12 +1,11 @@
 package org.example.first.groundingwebapis.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
+
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Entity
@@ -14,6 +13,7 @@ import lombok.Getter;
 public class OrderPiece {
 
     @Id
+    @Column(name = "order_piece_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderPieceId;
 
@@ -26,4 +26,14 @@ public class OrderPiece {
     @Column(name = "count", nullable = false)
     private Integer count;
 
+    @OneToMany(mappedBy = "orderPiece", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Notification> notification = new LinkedHashSet<>();
+
+    public Collection<Notification> getNotification() {
+        return notification;
+    }
+
+    public void addNotification(Notification notification) {
+        this.notification.add(notification);
+    }
 }
