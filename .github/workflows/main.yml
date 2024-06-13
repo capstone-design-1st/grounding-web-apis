@@ -100,6 +100,8 @@ jobs:
                 -e AWS_BUCKET_NAME='${{ secrets.AWS_BUCKET_NAME }}' \
                 -e AWS_REGION='${{ secrets.AWS_REGION }}' \
                 -e CLOUDFRONT_URL='${{ secrets.CLOUDFRONT_URL }}' \
+                -e KAFKA_HOST='${{ secrets.KAFKA_HOST }}' \
+                -e KAFKA_PORT='${{ secrets.KAFKA_PORT }}' \
                 ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.NEXT_WEB_VER }}
             sleep 15
             sudo docker image prune -af || true
