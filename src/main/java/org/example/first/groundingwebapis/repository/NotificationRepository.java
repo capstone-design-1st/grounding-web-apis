@@ -11,7 +11,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    Notification findByOrderPieceId(@Param("order_piece_id") Long orderPieceId);
 
     @Query("SELECT n FROM Notification n WHERE n.pieceInvestment.pieceInvestmentId = :pieceInvestmentId")
     Page<NotificationDto.GetResponse> readByPieceInvestmentId(Long pieceInvestmentId, Pageable pageable);

@@ -296,6 +296,6 @@ public class InvestmentPieceService {
 
         Page<NotificationDto.GetResponse> notifications = notificationRepository.readByPieceInvestmentId(pieceInvestmentId, pageable);
 
-
+        return notifications;
     }
 }

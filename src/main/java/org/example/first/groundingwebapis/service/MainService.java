@@ -111,7 +111,7 @@ public class MainService {
             if (a.isSaleCompleted()) {
                 MainStatusCompSubResponse complete = new MainStatusCompSubResponse();
                 complete.setInvestment_piece_id(a.getPieceInvestmentId());
-                complete.setName(a.getAssetName());
+                complete.setName(a.getName());
                 complete.setPrice(a.getPrice());
                 complete.setReturns(investmentStatusRepository.findByUserId(userId).getInvestmentReturn().toString() + "%");
                 completed.add(complete);
@@ -120,7 +120,7 @@ public class MainService {
                 var total =  investmentStatusRepository.findByUserId(userId).getSelledTotalCount();
                 var resCount = a.getPieceCount() - total;
                 var rate = (double) total / resCount;
-                notComp.setName(a.getAssetName());
+                notComp.setName(a.getName());
                 notComp.setInvestment_piece_id(a.getPieceInvestmentId());
                 notComp.setRegister_pieces(a.getPieceCount());
                 notComp.setSaled_pieces(a.getPrice());

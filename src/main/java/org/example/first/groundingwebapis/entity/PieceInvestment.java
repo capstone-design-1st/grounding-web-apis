@@ -21,6 +21,9 @@ public class PieceInvestment {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "asset_name")
     private String assetName;
 
@@ -115,7 +118,7 @@ public class PieceInvestment {
     private String assetCertificateUrl;
 
 
-    @OneToMany(mappedBy = "orderPiece", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pieceInvestment", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Notification> notification = new LinkedHashSet<>();
 
     public PieceInvestment(String type, String locate, Integer price, String otherInformation, Integer floors,
