@@ -102,8 +102,8 @@ public class PieceInvestment {
     @Column(name = "price_per_unit")
     private Integer pricePerUnit;
 
-    @Column(name = "investment_point")
-    private String investmentPoint;
+    @Column(name = "one_line")
+    private String oneline;
 
     @Column(name = "land_image_registration")
     private String landImageRegistration;
@@ -123,7 +123,7 @@ public class PieceInvestment {
 
     public PieceInvestment(String type, String locate, Integer price, String otherInformation, Integer floors,
                            String useArea, String mainUse, double landArea, double totalArea, double buildingToRandRatio,
-                           double floor_area_ratio, String buildingDate, boolean automaticCloseFlag, Integer pricePerUnit, String investmentPoint, String assetType,
+                           double floor_area_ratio, String buildingDate, boolean automaticCloseFlag, Integer pricePerUnit, String oneline, String assetType,
                            String entryStatus, String desiredPrice, Integer pieceCount, String leaseStartDate, String leaseEndDate, String assetImage, String walletAddress, String assetCertificateUrl, String assetName, Long userId) {
         this.type = type;
         this.locate = locate;
@@ -140,7 +140,7 @@ public class PieceInvestment {
         this.automaticCloseFlag = automaticCloseFlag;
         //this.date = LocalDateTime.now();
         this.pricePerUnit = pricePerUnit;
-        this.investmentPoint = investmentPoint;
+        this.oneline = oneline;
         this.assetType = assetType;
         this.entryStatus = entryStatus;
         this.desiredPrice = desiredPrice;
@@ -157,7 +157,7 @@ public class PieceInvestment {
     public PieceInvestment(String type, String locate, Integer price, String otherInformation, Integer floors,
                            String useArea, String mainUse, double landArea, double totalArea, double buildingToRandRatio,
                            double floor_area_ratio, String buildingDate, boolean automaticCloseFlag, String assetType, String entryStatus,
-                           String landClassification, String recommendedUse, String desiredPrice, Integer pricePerUnit, String investmentPoint,
+                           String landClassification, String recommendedUse, String desiredPrice, Integer pricePerUnit, String oneline,
                            String landImageRegistration, Integer pieceCount, String leaseStartDate, String leaseEndDate, String assetImage, String walletAddress, String assetCertificateUrl, String assetName, Long userId) {
         this.type = type;
         this.locate = locate;
@@ -179,7 +179,7 @@ public class PieceInvestment {
         this.recommendedUse = recommendedUse;
         this.desiredPrice = desiredPrice;
         this.pricePerUnit = pricePerUnit;
-        this.investmentPoint = investmentPoint;
+        this.oneline = oneline;
         this.landImageRegistration = landImageRegistration;
         this.pieceCount = pieceCount;
         this.leaseStartDate = leaseStartDate;

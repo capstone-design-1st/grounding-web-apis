@@ -35,7 +35,7 @@ public class InvestmentPieceRequest {
     private String recommendedUse;
     private String desiredPrice;
     private Integer pricePerUnit;
-    private String investmentPoint;
+    private String oneline;
     private String landImageRegistration;
     private String leaseStartDate;
     private String leaseEndDate;
