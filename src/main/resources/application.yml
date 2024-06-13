@@ -98,5 +98,6 @@ app:
     expiration: ${APP_JWT_EXPIRATION}
   client:
     url: ${CLIENT_URL}
+    url2: ${CLIENT_URL2}
   host:
     url: ${HOST_URL}
